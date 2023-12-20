@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:student/models/belongings.dart';
-import 'package:student/screens/play_screen.dart';
-// import "package:video_player/video_player.dart";
+// import 'package:student/screens/play_screen.dart';
+// import "package:http/http.dart" as http;
+// import "dart:convert";
+
+import 'package:student/screens/ready_screen.dart';
 
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
@@ -39,11 +42,23 @@ class GameScreen extends StatelessWidget {
 
   void _startButton(BuildContext context) async {
     await bgm.setVolume(0.05);
-    await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 1);
+    await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.0);
+    const date = "2023-12-17";
 
     ///
     ///ここにサーバーからデータもらうコードを書き、belongingへ入れる
-    ///
+    ///https://motta-9dbb2df4f6d7.herokuapp.com/api/v1/student/timetable-history/2023-12-17
+    // final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
+    //     "api/v1/student/timetable-history/$date");
+    // try {
+    //   final response =
+    //       await http.get(url, headers: {"Content-Type": "application/json"});
+    //   final data = json.decode(response.body);
+    //   debugPrint(data);
+    // } catch (error) {
+    //   debugPrint(error.toString());
+    // }
+
     ///
 
     penguinVoice.onPlayerStateChanged.listen((event) {
@@ -51,7 +66,7 @@ class GameScreen extends StatelessWidget {
         if (!context.mounted) return;
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (ctx) => PlayScreen(belongings: belongings)),
+              builder: (ctx) => ReadyScreen(belongings: belongings)),
         );
       }
     });
@@ -68,27 +83,36 @@ class GameScreen extends StatelessWidget {
           "Motta",
           style: TextStyle(
             fontSize: 35,
+            color: Colors.white,
+            fontWeight: FontWeight.w900,
           ),
         )),
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Image.asset("assets/images/penguin/penguin10f.gif"),
+            Image.asset("images/start_page.png"),
             // Image.asset("assets/images/chick/chick.gif"),
             // Image.asset("assets/images/hamster/hamster.gif"),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[50],
-              ),
-              onPressed: () {
-                _startButton(context);
-              },
-              child: const Text(
-                "GameStart",
-                style: TextStyle(fontSize: 35, color: Colors.blueAccent),
+            SizedBox(
+              height: 100,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 255, 217, 66),
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10)))),
+                onPressed: () {
+                  _startButton(context);
+                },
+                child: const Text(
+                  "もちものかくにん　はじめ",
+                  style: TextStyle(
+                      fontSize: 35,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],

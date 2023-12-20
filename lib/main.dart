@@ -1,10 +1,12 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:student/screens/game_screen.dart';
 
 void main() {
   const app = MyApp();
-  runApp(app);
+  final devicePreview = DevicePreview(builder: (_) => app);
+  runApp(devicePreview);
 }
 
 class MyApp extends StatelessWidget {
