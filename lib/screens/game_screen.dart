@@ -6,6 +6,8 @@ import 'package:student/models/belongings.dart';
 // import "dart:convert";
 
 import 'package:student/screens/ready_screen.dart';
+import 'package:student/widgets/appbar_motta.dart';
+import 'package:student/widgets/elevated_button_with_style.dart';
 
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
@@ -41,8 +43,8 @@ class GameScreen extends StatelessWidget {
   //////////////////////////////////////////
 
   void _startButton(BuildContext context) async {
-    await bgm.setVolume(0.05);
-    await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.0);
+    await bgm.setVolume(0.1);
+    await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
     const date = "2023-12-17";
 
     ///
@@ -63,11 +65,13 @@ class GameScreen extends StatelessWidget {
 
     penguinVoice.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
-        if (!context.mounted) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (ctx) => ReadyScreen(belongings: belongings)),
-        );
+        Future.delayed(const Duration(milliseconds: 1200), () {
+          if (!context.mounted) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+                builder: (ctx) => ReadyScreen(belongings: belongings)),
+          );
+        });
       }
     });
   }
@@ -75,20 +79,15 @@ class GameScreen extends StatelessWidget {
   // late VideoPlayerController _controller;
   @override
   Widget build(BuildContext context) {
-    // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.5);
+    bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
+    bgm.onPlayerStateChanged.listen((event) {
+      if (event == PlayerState.completed) {
+        bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
+      }
+    });
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-            child: Text(
-          "Motta",
-          style: TextStyle(
-            fontSize: 35,
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-          ),
-        )),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: const AppBarMotta(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -98,22 +97,9 @@ class GameScreen extends StatelessWidget {
             // Image.asset("assets/images/hamster/hamster.gif"),
             SizedBox(
               height: 100,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 255, 217, 66),
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)))),
-                onPressed: () {
-                  _startButton(context);
-                },
-                child: const Text(
-                  "もちものかくにん　はじめ",
-                  style: TextStyle(
-                      fontSize: 35,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
+              child: ElevatedButtonWithStyle("もちものかくにん　はじめ", () {
+                _startButton(context);
+              }),
             ),
           ],
         ),

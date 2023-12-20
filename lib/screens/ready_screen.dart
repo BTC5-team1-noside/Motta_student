@@ -3,6 +3,7 @@ import 'package:student/models/belongings.dart';
 import 'package:student/screens/play_screen.dart';
 // import 'package:student/widgets/subject_speak.dart';
 import "package:flutter_tts/flutter_tts.dart";
+import 'package:student/widgets/appbar_motta.dart';
 
 class ReadyScreen extends StatefulWidget {
   const ReadyScreen({super.key, required this.belongings});
@@ -58,18 +59,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-            child: Text(
-          "Motta",
-          style: TextStyle(
-            fontSize: 35,
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-          ),
-        )),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: const AppBarMotta(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

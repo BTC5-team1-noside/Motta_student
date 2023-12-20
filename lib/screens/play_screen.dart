@@ -2,6 +2,8 @@ import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:student/models/belongings.dart';
+import 'package:student/widgets/appbar_motta.dart';
+import 'package:student/widgets/elevated_button_with_style.dart';
 import 'package:student/widgets/subject_speak.dart';
 import "package:flutter_tts/flutter_tts.dart";
 
@@ -106,18 +108,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-            child: Text(
-          "Motta",
-          style: TextStyle(
-            fontSize: 35,
-            color: Colors.white,
-            fontWeight: FontWeight.w900,
-          ),
-        )),
-        backgroundColor: Colors.blue,
-      ),
+      appBar: const AppBarMotta(),
       body: Center(
         child: Expanded(
           child: Column(
@@ -133,54 +124,9 @@ class _PlayScreenState extends State<PlayScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 217, 66),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () {},
-                    child: const Text(
-                      "もった",
-                      style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 217, 66),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () {},
-                    child: const Text(
-                      "もういちど",
-                      style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 217, 66),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10)))),
-                    onPressed: () {},
-                    child: const Text(
-                      "やめる",
-                      style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  ElevatedButtonWithStyle("もった", () {}),
+                  ElevatedButtonWithStyle("もういちど", () {}),
+                  ElevatedButtonWithStyle("やめる", () {}),
                 ],
               )
             ],
