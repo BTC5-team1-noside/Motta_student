@@ -2,6 +2,7 @@ import 'dart:js_util';
 
 import 'package:flutter/material.dart';
 import 'package:student/models/belongings.dart';
+import 'package:student/screens/end_screen.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
 import 'package:student/widgets/subject_speak.dart';
@@ -93,6 +94,15 @@ class _PlayScreenState extends State<PlayScreen> {
                   ),
                   onTap: () async {
                     await tts.speak(e);
+                    tts.setCompletionHandler(() {
+                      Future.delayed(const Duration(milliseconds: 250), () {
+                        if (!context.mounted) return;
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (ctx) => const EndScreen()),
+                        );
+                      });
+                    });
                   }),
             ),
             const Text(

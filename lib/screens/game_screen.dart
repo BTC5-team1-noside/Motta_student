@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:student/models/belongings.dart';
 // import 'package:student/screens/play_screen.dart';
-// import "package:http/http.dart" as http;
-// import "dart:convert";
+import "package:http/http.dart" as http;
+import "dart:convert";
 
 import 'package:student/screens/ready_screen.dart';
 import 'package:student/widgets/appbar_motta.dart';
@@ -49,17 +49,19 @@ class GameScreen extends StatelessWidget {
 
     ///
     ///ここにサーバーからデータもらうコードを書き、belongingへ入れる
-    ///https://motta-9dbb2df4f6d7.herokuapp.com/api/v1/student/timetable-history/2023-12-17
-    // final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
-    //     "api/v1/student/timetable-history/$date");
-    // try {
-    //   final response =
-    //       await http.get(url, headers: {"Content-Type": "application/json"});
-    //   final data = json.decode(response.body);
-    //   debugPrint(data);
-    // } catch (error) {
-    //   debugPrint(error.toString());
-    // }
+    // /https://motta-9dbb2df4f6d7.herokuapp.com/api/v1/student/timetable-history/2023-12-17
+    final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
+        "api/v1/student/timetable-history/$date");
+    // final url =
+    //     Uri.http("localhost:8000", "api/v1/student/timetable-history/$date");
+    try {
+      final response =
+          await http.get(url, headers: {"Content-Type": "application/json"});
+      final data = json.decode(response.body);
+      debugPrint(data.toString());
+    } catch (error) {
+      debugPrint(error.toString());
+    }
 
     ///
 
@@ -79,7 +81,8 @@ class GameScreen extends StatelessWidget {
   // late VideoPlayerController _controller;
   @override
   Widget build(BuildContext context) {
-    bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
+    bgm.stop();
+    // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
     bgm.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
         bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
