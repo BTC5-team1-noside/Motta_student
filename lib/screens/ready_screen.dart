@@ -61,18 +61,27 @@ class _ReadyScreenState extends State<ReadyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarMotta(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset("images/penguin/penguin.jpg"),
-            // Image.asset("assets/images/chick/chick.gif"),
-            // Image.asset("assets/images/hamster/hamster.gif"),
-            const SizedBox(
-              height: 100,
-            ),
-            BodyText(text: text),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image:
+                AssetImage('assets/images/background.png'), // 배경으로 사용할 이미지 경로
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset("images/penguin/penguin.jpg"),
+              // Image.asset("assets/images/chick/chick.gif"),
+              // Image.asset("assets/images/hamster/hamster.gif"),
+              const SizedBox(
+                height: 100,
+              ),
+              BodyText(text: text),
+            ],
+          ),
         ),
       ),
     );

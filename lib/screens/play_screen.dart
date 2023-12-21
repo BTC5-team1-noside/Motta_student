@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/end_screen.dart';
 import 'package:student/widgets/appbar_motta.dart';
+import 'package:student/widgets/body_text.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
 import 'package:student/widgets/subject_speak.dart';
 import "package:flutter_tts/flutter_tts.dart";
@@ -20,8 +21,8 @@ class PlayScreen extends StatefulWidget {
 class _PlayScreenState extends State<PlayScreen> {
   late DayBelongings _belongings;
   late FlutterTts tts = FlutterTts();
-  late List<Subject> _subjects;
-  late List<String> _items;
+  late List _subjects;
+  late List _items;
   int index = 0;
 
   @override
@@ -42,85 +43,84 @@ class _PlayScreenState extends State<PlayScreen> {
     if (index < _subjects.length) {
       mainComment = Container(
         padding: const EdgeInsets.symmetric(horizontal: 200),
-        child: Column(
-          children: [
-            Text(
-              "${_subjects[index].period} じかんめ ${_subjects[index].subject}",
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            ..._subjects[index].belongings.map(
-                  (e) => ListTile(
-                      titleAlignment: ListTileTitleAlignment.center,
-                      title: Text(
-                        e,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      onTap: () async {
-                        await tts.speak(e);
-                        setState(() {
-                          index++;
-                        });
-                      }),
+        child: SizedBox(
+          height: 250,
+          child: ListView(
+            children: [
+              Text(
+                "${_subjects[index].period} じかんめ ${_subjects[index].subject}",
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
                 ),
-            const Text(
-              "もった？",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
               ),
-            ),
-          ],
+              ..._subjects[index].belongings.map(
+                    (e) => ListTile(
+                        titleAlignment: ListTileTitleAlignment.center,
+                        title: Text(
+                          e,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        onTap: () async {
+                          await tts.speak(e);
+                          setState(() {
+                            index++;
+                          });
+                        }),
+                  ),
+            ],
+          ),
         ),
       );
     } else {
       mainComment = Container(
         padding: const EdgeInsets.symmetric(horizontal: 200),
-        child: Column(
-          children: [
-            ..._items.map(
-              (e) => ListTile(
-                  title: Text(
-                    e,
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w600,
+        child: SizedBox(
+          height: 250,
+          child: ListView(
+            children: [
+              ..._items.map(
+                (e) => ListTile(
+                    title: Text(
+                      e,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  onTap: () async {
-                    await tts.speak(e);
-                    tts.setCompletionHandler(() {
-                      Future.delayed(const Duration(milliseconds: 250), () {
-                        if (!context.mounted) return;
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (ctx) => const EndScreen()),
-                        );
+                    onTap: () async {
+                      await tts.speak(e);
+                      tts.setCompletionHandler(() {
+                        Future.delayed(const Duration(milliseconds: 250), () {
+                          if (!context.mounted) return;
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (ctx) => const EndScreen()),
+                          );
+                        });
                       });
-                    });
-                  }),
-            ),
-            const Text(
-              "もった？",
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
+                    }),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
 
     return Scaffold(
       appBar: const AppBarMotta(),
-      body: Center(
-        child: Expanded(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image:
+                AssetImage('assets/images/background.png'), // 배경으로 사용할 이미지 경로
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -128,8 +128,9 @@ class _PlayScreenState extends State<PlayScreen> {
               // Image.asset("assets/images/chick/chick.gif"),
               // Image.asset("assets/images/hamster/hamster.gif"),
               mainComment,
+              const BodyText(text: "もった？"),
               const SizedBox(
-                height: 100,
+                height: 50,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

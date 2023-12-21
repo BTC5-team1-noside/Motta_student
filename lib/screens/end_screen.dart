@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:student/models/belongings.dart';
-// import 'package:student/screens/play_screen.dart';
 import "package:flutter_tts/flutter_tts.dart";
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
@@ -14,7 +12,7 @@ class EndScreen extends StatefulWidget {
 
 class _EndScreenState extends State<EndScreen> {
   late FlutterTts tts = FlutterTts();
-  final String text = "よくできました！";
+  final String text = "ぜんぶかくにんできたね\nすごいぞ〜〜〜〜";
   @override
   void initState() {
     super.initState();
@@ -54,26 +52,22 @@ class _EndScreenState extends State<EndScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarMotta(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                Image.asset("images/end_background.png"),
-                Positioned.fill(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Image.asset("images/penguin/penguin_end.jpg"),
-                      ),
-                      BodyText(text: text),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/images/end_background.png'), // 배경으로 사용할 이미지 경로
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset("images/penguin/penguin_end.jpg"),
+              BodyText(text: text),
+            ],
+          ),
         ),
       ),
     );

@@ -17,22 +17,20 @@ class GameScreen extends StatelessWidget {
   //////////////////////////////////////////
 
   DayBelongings belongings = DayBelongings(
-    selectedDate: Date(
-      dateTime: DateTime(2023, 12, 20),
-    ),
+    selectedDate: "2023-12-20",
     subjects: [
       Subject(
-        period: "1限",
+        period: 1,
         subject: "国語",
         belongings: ["国語教科書", "国語のノート", "漢字ドリル"],
       ),
       Subject(
-        period: "2限",
+        period: 2,
         subject: "数学",
         belongings: ["数学教科書", "数学のノート", "三角定規"],
       ),
       Subject(
-        period: "3限",
+        period: 3,
         subject: "音楽",
         belongings: ["音楽教科書", "音楽のノート", "リコーダー"],
       )
@@ -47,35 +45,30 @@ class GameScreen extends StatelessWidget {
     await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
     const date = "2023-12-17";
 
-    ///
-    ///ここにサーバーからデータもらうコードを書き、belongingへ入れる
-    // /https://motta-9dbb2df4f6d7.herokuapp.com/api/v1/student/timetable-history/2023-12-17
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "api/v1/student/timetable-history/$date");
-    // final url =
-    //     Uri.http("localhost:8000", "api/v1/student/timetable-history/$date");
+
     try {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
-      debugPrint(data.toString());
+      // debugPrint("$data");
+      DayBelongings dataFromJson = DayBelongings.fromJson(data);
+      debugPrint("$dataFromJson");
+      penguinVoice.onPlayerStateChanged.listen((event) {
+        if (event == PlayerState.completed) {
+          Future.delayed(const Duration(milliseconds: 1200), () {
+            if (!context.mounted) return;
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (ctx) => ReadyScreen(belongings: dataFromJson)),
+            );
+          });
+        }
+      });
     } catch (error) {
       debugPrint(error.toString());
     }
-
-    ///
-
-    penguinVoice.onPlayerStateChanged.listen((event) {
-      if (event == PlayerState.completed) {
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          if (!context.mounted) return;
-          Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: (ctx) => ReadyScreen(belongings: belongings)),
-          );
-        });
-      }
-    });
   }
 
   // late VideoPlayerController _controller;
