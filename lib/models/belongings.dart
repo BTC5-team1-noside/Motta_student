@@ -21,7 +21,7 @@ class Subject {
   factory Subject.fromJson(Map<String, dynamic> json) {
     return Subject(
       period: json["period"] as int,
-      subject: json["subject"] as String,
+      subject: json["subject_name"] as String,
       belongings: json["belongings"] as List,
     );
   }
@@ -31,18 +31,21 @@ class DayBelongings {
   DayBelongings(
       {required this.selectedDate,
       required this.subjects,
-      required this.items});
+      required this.items,
+      required this.additionalItems});
 
   final String selectedDate;
   final List subjects;
   final List items;
+  final List additionalItems;
 
   factory DayBelongings.fromJson(Map<String, dynamic> json) {
     return DayBelongings(
       selectedDate: json["selectedDate"] as String,
       subjects: json["subjects"].map((item) => Subject.fromJson(item)).toList()
           as List,
-      items: json["items"] as List,
+      items: json["itemNames"] as List,
+      additionalItems: json["additionalItemNames"] as List,
     );
   }
 }

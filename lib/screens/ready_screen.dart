@@ -35,7 +35,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    await tts.setSpeechRate(1.1);
+    await tts.setSpeechRate(1.0);
     // final voices = await tts.getVoices;
     // debugPrint(voices.toString());
     await tts.speak(text);

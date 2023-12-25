@@ -36,6 +36,7 @@ class GameScreen extends StatelessWidget {
       )
     ],
     items: ["体操着", "エプロン", "箸いれ"],
+    additionalItems: [],
   );
 
   //////////////////////////////////////////
@@ -43,16 +44,16 @@ class GameScreen extends StatelessWidget {
   void _startButton(BuildContext context) async {
     await bgm.setVolume(0.1);
     await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
-    const date = "2023-12-17";
+    const date = "2023-12-20";
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
-        "api/v1/student/timetable-history/$date");
-
+        "/api/v1/student/timetables-history/$date");
+    debugPrint("$url");
     try {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
-      // debugPrint("$data");
+      debugPrint("$data");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
       debugPrint("$dataFromJson");
       penguinVoice.onPlayerStateChanged.listen((event) {
