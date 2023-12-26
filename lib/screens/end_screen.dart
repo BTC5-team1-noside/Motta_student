@@ -4,40 +4,38 @@ import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 
 class EndScreen extends StatefulWidget {
-  const EndScreen({super.key});
-
+  EndScreen({super.key, required this.tts});
+  FlutterTts tts;
   @override
   State<EndScreen> createState() => _EndScreenState();
 }
 
 class _EndScreenState extends State<EndScreen> {
-  late FlutterTts tts = FlutterTts();
+  // late FlutterTts tts = FlutterTts();
+  late FlutterTts tts;
   final String text = "ぜんぶかくにんできたね\nすごいぞ!\nキャッホー";
   @override
   void initState() {
     super.initState();
+    tts = widget.tts;
     _speak();
   }
 
   Future<void> _speak() async {
     await tts.setLanguage("ja-JP");
     // await tts.setPitch(1.3);
+    // await tts.setSpeechRate(1.1);
     await tts.setVoice({
       // "name": "Yuna",
       // "locale": "ko-KR",
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    // await tts.setSpeechRate(1.1);
     await tts.speak(text);
 
     tts.setCompletionHandler(() {
       Future.delayed(const Duration(seconds: 1), () {
         if (!context.mounted) return;
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //       builder: (ctx) => PlayScreen(belongings: _belongings)),
-        // );
       });
     });
   }
