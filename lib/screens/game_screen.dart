@@ -89,7 +89,8 @@ class GameScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Image.asset("images/start_page.png"),
+            // Image.asset("images/start_page.png"), Chrome version
+            Image.asset("assets/images/start_page.png"), // simulator version
             // Image.asset("assets/images/chick/chick.gif"),
             // Image.asset("assets/images/hamster/hamster.gif"),
             SizedBox(

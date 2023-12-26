@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/play_screen.dart';
 // import 'package:student/widgets/subject_speak.dart';
@@ -58,6 +59,13 @@ class _ReadyScreenState extends State<ReadyScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    tts.stop();
+    // Dispose FlutterTts instance here
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarMotta(),
@@ -65,7 +73,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image:
-                AssetImage('assets/images/background.png'), // 배경으로 사용할 이미지 경로
+                AssetImage('assets/images/background.PNG'), // 배경으로 사용할 이미지 경로
             fit: BoxFit.cover,
           ),
         ),
@@ -73,7 +81,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset("images/penguin/penguin.jpg"),
+              Image.asset("assets/images/penguin/penguin.jpg"),
               // Image.asset("assets/images/chick/chick.gif"),
               // Image.asset("assets/images/hamster/hamster.gif"),
               const SizedBox(

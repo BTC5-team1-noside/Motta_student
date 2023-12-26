@@ -5,8 +5,9 @@ import 'package:student/screens/game_screen.dart';
 
 void main() {
   const app = MyApp();
-  final devicePreview = DevicePreview(builder: (_) => app);
-  runApp(devicePreview);
+  // final devicePreview = DevicePreview(builder: (_) => app);
+  // runApp(devicePreview);
+  runApp(app);
 }
 
 class MyApp extends StatelessWidget {

@@ -1,9 +1,10 @@
-import 'dart:js_util';
-import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/end_screen.dart';
+import 'package:student/screens/game_screen.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
@@ -26,6 +27,56 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _additionalItems;
   int index = 0;
   bool answered = false;
+  SpeechToText speechToText = SpeechToText();
+  bool isListening = false;
+  late String sttText;
+  Timer? _listeningTimer;
+
+  //////////////////////////////////
+  ////音声認識
+  void _startListening() async {
+    var available = await speechToText.initialize();
+    if (available) {
+      setState(() {
+        isListening = true;
+      });
+      speechToText.listen(
+        onResult: (result) {
+          if (result.recognizedWords.contains("持った")) {
+            setState(() {
+              // sttText = "いいね&#xff01;"; // 「もった」が含まれている場合
+              answered = true;
+            });
+          } else {
+            sttText = result.recognizedWords; // その他のテキストを更新
+          }
+        },
+        localeId: 'ja_JP', // 日本語の設定
+      );
+
+      // 4秒後にリスニングを停止
+      _listeningTimer = Timer(const Duration(seconds: 4), () {
+        if (isListening) {
+          speechToText.stop();
+          setState(() {
+            isListening = false;
+          });
+        }
+      });
+    }
+  }
+
+  void _stopListening() {
+    if (isListening) {
+      speechToText.stop();
+      setState(() {
+        isListening = false;
+      });
+      _listeningTimer?.cancel(); // タイマーが動いていたら停止
+    }
+  }
+
+  ///////////////////////////////////
 
   @override
   void initState() {
@@ -34,6 +85,13 @@ class _PlayScreenState extends State<PlayScreen> {
     _subjects = _belongings.subjects;
     _items = _belongings.items;
     _additionalItems = _belongings.additionalItems;
+  }
+
+  @override
+  void dispose() {
+    tts.stop();
+    _listeningTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> speak(String text) async {
@@ -47,6 +105,9 @@ class _PlayScreenState extends State<PlayScreen> {
     });
     await tts.setSpeechRate(0.8);
     await tts.speak(text);
+    tts.setCompletionHandler(() {
+      _startListening();
+    });
   }
 
   @override
@@ -76,10 +137,11 @@ class _PlayScreenState extends State<PlayScreen> {
       text += "もった？";
     }
 
-    if (!answered) {
-      speak(text);
+    if (!isListening) {
+      if (!answered) {
+        speak(text);
+      }
     }
-    // debugPrint(text);
 
     Widget mainContent;
     if (index < _subjects.length) {
@@ -183,18 +245,20 @@ class _PlayScreenState extends State<PlayScreen> {
           children: [
             ElevatedButtonWithStyle("もった", () {
               setState(() {
-                // index++;
                 answered = true;
               });
             }),
             ElevatedButtonWithStyle("もういちど", () {
               setState(() {});
             }),
-            ElevatedButtonWithStyle("やめる", () {}),
+            ElevatedButtonWithStyle("やめる", () {
+              // Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => GameScreen()));
+            })
           ],
         )
       ];
-      // 배경으로 사용할 이미지 경로
     } else {
       backgroundPicture = const AssetImage('assets/images/good_background.png');
       main = [const BodyText(text: "グッド！")];
