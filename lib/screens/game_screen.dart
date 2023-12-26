@@ -45,8 +45,8 @@ class GameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bgm.stop();
-    bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
+    // bgm.stop();
+    // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
     bgm.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
         bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);

@@ -211,6 +211,7 @@ class _PlayScreenState extends State<PlayScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButtonWithStyle("もった", () {
+              tts.stop();
               setState(() {
                 answered = true;
                 isOnce = false;
@@ -242,6 +243,7 @@ class _PlayScreenState extends State<PlayScreen> {
           setState(() {
             index++;
             answered = false;
+            isListening = false;
           });
         }
       });

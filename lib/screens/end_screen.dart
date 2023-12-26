@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_tts/flutter_tts.dart";
+import 'package:student/screens/calendar_page.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 
@@ -36,6 +37,8 @@ class _EndScreenState extends State<EndScreen> {
     tts.setCompletionHandler(() {
       Future.delayed(const Duration(seconds: 1), () {
         if (!context.mounted) return;
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (ctx) => const CalendarPage()));
       });
     });
   }
