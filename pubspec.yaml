@@ -40,6 +40,9 @@ dependencies:
   audioplayers:
   device_preview:
   http:
+  table_calendar:
+  intl:
+  provider:
 
 dev_dependencies:
   flutter_test:
