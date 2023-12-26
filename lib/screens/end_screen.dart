@@ -21,14 +21,14 @@ class _EndScreenState extends State<EndScreen> {
 
   Future<void> _speak() async {
     await tts.setLanguage("ja-JP");
-    await tts.setPitch(1.3);
+    // await tts.setPitch(1.3);
     await tts.setVoice({
       // "name": "Yuna",
       // "locale": "ko-KR",
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    await tts.setSpeechRate(1.1);
+    // await tts.setSpeechRate(1.1);
     await tts.speak(text);
 
     tts.setCompletionHandler(() {
@@ -56,7 +56,7 @@ class _EndScreenState extends State<EndScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-                'assets/images/end_background.png'), // 배경으로 사용할 이미지 경로
+                'assets/images/end_background.PNG'), // 배경으로 사용할 이미지 경로
             fit: BoxFit.cover,
           ),
         ),
@@ -64,7 +64,7 @@ class _EndScreenState extends State<EndScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset("images/penguin/penguin_end.jpg"),
+              Image.asset("assets/images/penguin/penguin_end.jpg"),
               BodyText(text: text),
             ],
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+// import 'package:http/http.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/play_screen.dart';
 // import 'package:student/widgets/subject_speak.dart';
@@ -29,14 +29,14 @@ class _ReadyScreenState extends State<ReadyScreen> {
 
   Future<void> _speak() async {
     await tts.setLanguage("ja-JP");
-    await tts.setPitch(1.3);
+    // await tts.setPitch(1.3);
     await tts.setVoice({
       // "name": "Yuna",
       // "locale": "ko-KR",
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    await tts.setSpeechRate(1.0);
+    // await tts.setSpeechRate(1.0);
     // final voices = await tts.getVoices;
     // debugPrint(voices.toString());
     await tts.speak(text);

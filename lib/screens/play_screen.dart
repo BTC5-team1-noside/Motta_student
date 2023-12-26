@@ -31,48 +31,51 @@ class _PlayScreenState extends State<PlayScreen> {
   bool isListening = false;
   late String sttText;
   Timer? _listeningTimer;
+  bool isGood = false;
 
   //////////////////////////////////
   ////音声認識
   void _startListening() async {
     var available = await speechToText.initialize();
     if (available) {
-      setState(() {
-        isListening = true;
-      });
+      isListening = true;
       speechToText.listen(
         onResult: (result) {
           if (result.recognizedWords.contains("持った")) {
-            setState(() {
-              // sttText = "いいね&#xff01;"; // 「もった」が含まれている場合
-              answered = true;
-            });
+            debugPrint("$result,$index");
+            _stopListening();
+            if (isGood == true) {
+              setState(() {
+                // sttText = "いいね&#xff01;"; // 「もった」が含まれている場合
+                answered = true;
+              });
+            }
           } else {
-            sttText = result.recognizedWords; // その他のテキストを更新
+            // sttText = result.recognizedWords; // その他のテキストを更新
           }
         },
         localeId: 'ja_JP', // 日本語の設定
       );
 
       // 4秒後にリスニングを停止
-      _listeningTimer = Timer(const Duration(seconds: 4), () {
-        if (isListening) {
-          speechToText.stop();
-          setState(() {
-            isListening = false;
-          });
-        }
-      });
+      // _listeningTimer = Timer(const Duration(seconds: 2), () {
+      //   if (isListening) {
+      //     speechToText.stop();
+      //     // setState(() {
+      //     isListening = false;
+      //     // });
+      //   }
+      // });
     }
   }
 
   void _stopListening() {
     if (isListening) {
       speechToText.stop();
-      setState(() {
-        isListening = false;
-      });
-      _listeningTimer?.cancel(); // タイマーが動いていたら停止
+      // setState(() {
+      isListening = false;
+      // });
+      // _listeningTimer?.cancel(); // タイマーが動いていたら停止
     }
   }
 
@@ -96,16 +99,17 @@ class _PlayScreenState extends State<PlayScreen> {
 
   Future<void> speak(String text) async {
     await tts.setLanguage("ja-JP");
-    await tts.setPitch(1.3);
+    // await tts.setPitch(1.3);
     await tts.setVoice({
       // "name": "Yuna",
       // "locale": "ko-KR",
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    await tts.setSpeechRate(0.8);
+    // await tts.setSpeechRate(0.8);
     await tts.speak(text);
     tts.setCompletionHandler(() {
+      isGood = true;
       _startListening();
     });
   }
@@ -233,7 +237,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
 
     if (!answered) {
-      backgroundPicture = const AssetImage('assets/images/background.png');
+      backgroundPicture = const AssetImage('assets/images/background.PNG');
       main = [
         mainContent,
         const BodyText(text: "もった？"),
@@ -260,19 +264,21 @@ class _PlayScreenState extends State<PlayScreen> {
         )
       ];
     } else {
-      backgroundPicture = const AssetImage('assets/images/good_background.png');
+      backgroundPicture = const AssetImage('assets/images/good_background.PNG');
       main = [const BodyText(text: "グッド！")];
+      isGood = false;
       Future.delayed(const Duration(seconds: 1), () {
         if (index == _subjects.length) {
           if (!context.mounted) return;
           Navigator.of(context).push(
             MaterialPageRoute(builder: (ctx) => const EndScreen()),
           );
+        } else {
+          setState(() {
+            index++;
+            answered = false;
+          });
         }
-        setState(() {
-          index++;
-          answered = false;
-        });
       });
     }
 
