@@ -11,8 +11,8 @@ import 'package:student/widgets/elevated_button_with_style.dart';
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
 
-  AudioPlayer penguinVoice = AudioPlayer();
-  AudioPlayer bgm = AudioPlayer();
+  final AudioPlayer penguinVoice = AudioPlayer();
+  final AudioPlayer bgm = AudioPlayer();
 
   void _startButton(BuildContext context, {String date = "2024-01-12"}) async {
     await bgm.setVolume(0.1);

@@ -12,10 +12,10 @@ import "package:flutter_tts/flutter_tts.dart";
 import "package:student/widgets/list_tile_with_speak.dart";
 
 class PlayScreen extends StatefulWidget {
-  PlayScreen({super.key, required this.belongings, required this.tts});
+  const PlayScreen({super.key, required this.belongings, required this.tts});
 
   final DayBelongings belongings;
-  FlutterTts tts;
+  final FlutterTts tts;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -214,6 +214,7 @@ class _PlayScreenState extends State<PlayScreen> {
               setState(() {
                 answered = true;
                 isOnce = false;
+                isListening = false;
               });
             }),
             ElevatedButtonWithStyle("もういちど", () {

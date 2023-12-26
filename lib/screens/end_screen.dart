@@ -4,8 +4,8 @@ import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 
 class EndScreen extends StatefulWidget {
-  EndScreen({super.key, required this.tts});
-  FlutterTts tts;
+  const EndScreen({super.key, required this.tts});
+  final FlutterTts tts;
   @override
   State<EndScreen> createState() => _EndScreenState();
 }
