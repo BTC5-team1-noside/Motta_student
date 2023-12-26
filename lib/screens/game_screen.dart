@@ -44,7 +44,7 @@ class GameScreen extends StatelessWidget {
   void _startButton(BuildContext context) async {
     await bgm.setVolume(0.1);
     await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
-    const date = "2023-12-20";
+    const date = "2024-01-12";
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/timetables-history/$date");

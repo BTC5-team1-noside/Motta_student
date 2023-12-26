@@ -12,7 +12,7 @@ class EndScreen extends StatefulWidget {
 
 class _EndScreenState extends State<EndScreen> {
   late FlutterTts tts = FlutterTts();
-  final String text = "ぜんぶかくにんできたね\nすごいぞ〜〜〜〜";
+  final String text = "ぜんぶかくにんできたね\nすごいぞ!\nキャッホー";
   @override
   void initState() {
     super.initState();

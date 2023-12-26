@@ -128,7 +128,7 @@ class _PlayScreenState extends State<PlayScreen> {
       }
       text += "もった？";
     } else {
-      text += "日常品の。";
+      text += "いつもの。";
       for (int j = 0; j < _items.length; j++) {
         text += "${_items[j]}。、。";
       }
@@ -188,7 +188,7 @@ class _PlayScreenState extends State<PlayScreen> {
           child: ListView(
             children: [
               const Text(
-                "日常品の",
+                "いつもの、",
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,
