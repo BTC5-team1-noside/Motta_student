@@ -5,6 +5,7 @@ import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 import "package:http/http.dart" as http;
 import "dart:convert";
+import 'package:intl/intl.dart';
 
 class EndScreen extends StatefulWidget {
   const EndScreen({super.key, required this.tts});
@@ -36,18 +37,17 @@ class _EndScreenState extends State<EndScreen> {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
+      final addData1 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 30));
+      final addData2 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 28));
+      final addData3 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 26));
+      final addData4 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 20));
+      data.add(addData1);
+      data.add(addData2);
+      data.add(addData3);
+      data.add(addData4);
+      debugPrint("$data");
+      // data.push(DateTime(2023, 11, 30));
       return data;
-      // Future.delayed(
-      //   const Duration(seconds: 1),
-      //   () {
-      //     if (!context.mounted) return;
-      //     Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (ctx) => CalendarPage(data: data),
-      //       ),
-      //     );
-      //   },
-      // );
     } catch (error) {
       debugPrint(error.toString());
       return [];
@@ -67,7 +67,6 @@ class _EndScreenState extends State<EndScreen> {
       // data fetching
       await http.post(url,
           headers: {"Content-Type": "application/json"}, body: reqBodyDateJson);
-      debugPrint("POSTしたよ");
     } catch (error) {
       debugPrint(error.toString());
     }

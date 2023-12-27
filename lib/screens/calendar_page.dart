@@ -63,29 +63,27 @@ class CalendarPage extends StatelessWidget {
                     firstDay: model.firstDayOfMonth,
                     lastDay: model.lastDayOfMonth,
                     locale: Localizations.localeOf(context).languageCode,
-                    // markerBuilderの大きさに合わせて調整してください
                     rowHeight: 100,
-                    // 曜日文字の大きさに合わせて調整してください
-                    // 日本語だとこのくらいで見切れなくなります
                     daysOfWeekHeight: 60,
-                    // 見た目をスッキリさせるためなのでなくても大丈夫です
                     headerStyle: HeaderStyle(
                       titleTextStyle: const TextStyle(
-                        fontSize: 60,
+                        fontSize: 45,
                         fontWeight: FontWeight.w600,
                       ),
                       titleTextFormatter: (date, locale) {
-                        return DateFormat("yyyyねん　Mがつ", locale).format(date);
+                        return DateFormat("yyyyねん Mがつ", locale).format(date);
                       },
                       titleCentered: true,
                       formatButtonVisible: false,
-                      leftChevronVisible: false,
-                      rightChevronVisible: false,
+                      leftChevronVisible: true,
+                      rightChevronVisible: true,
                     ),
+                    onPageChanged: (focusedDay) {
+                      focusedDay = focusedDay;
+                      debugPrint("$focusedDay");
+                    },
                     calendarStyle: const CalendarStyle(
                       defaultTextStyle: TextStyle(fontSize: 21),
-                      // true（デフォルト）の場合は
-                      // todayBuilderが呼ばれるので設定しましょう
                       isTodayHighlighted: false,
                     ),
                     calendarBuilders: CalendarBuilders(
@@ -133,8 +131,8 @@ class CalendarPage extends StatelessWidget {
                         String dateOnly = DateFormat("yyyy-MM-dd").format(date);
                         if (data.contains(dateOnly)) {
                           return const Positioned(
-                            right: 1,
-                            bottom: 1,
+                            right: 35,
+                            bottom: 35,
                             child: Icon(
                               Icons.check_circle,
                               color: Colors.green,
