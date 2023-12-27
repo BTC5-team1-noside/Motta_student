@@ -24,7 +24,7 @@ class _EndScreenState extends State<EndScreen> {
     _speak();
   }
 
-  void getCalendarData(BuildContext context,
+  Future<List<dynamic>> getCalendarData(BuildContext context,
       {String date = "2023-12-01", String studentId = "1"}) async {
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/confirms-history", {
@@ -36,17 +36,38 @@ class _EndScreenState extends State<EndScreen> {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
-      Future.delayed(
-        const Duration(seconds: 1),
-        () {
-          if (!context.mounted) return;
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (ctx) => CalendarPage(data: data),
-            ),
-          );
-        },
-      );
+      return data;
+      // Future.delayed(
+      //   const Duration(seconds: 1),
+      //   () {
+      //     if (!context.mounted) return;
+      //     Navigator.of(context).push(
+      //       MaterialPageRoute(
+      //         builder: (ctx) => CalendarPage(data: data),
+      //       ),
+      //     );
+      //   },
+      // );
+    } catch (error) {
+      debugPrint(error.toString());
+      return [];
+    }
+  }
+
+  void postConfirmDate(BuildContext context,
+      {String date = "2023-12-01", String studentId = "1"}) async {
+    final url = Uri.https(
+        "motta-9dbb2df4f6d7.herokuapp.com", "/api/v1/student/confirms-history");
+    final reqBodyDate = {
+      "date": date,
+      "student_id": studentId,
+    };
+    final reqBodyDateJson = json.encode(reqBodyDate);
+    try {
+      // data fetching
+      await http.post(url,
+          headers: {"Content-Type": "application/json"}, body: reqBodyDateJson);
+      debugPrint("POSTしたよ");
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -64,25 +85,34 @@ class _EndScreenState extends State<EndScreen> {
     });
     await tts.speak(text);
 
+    // ignore: use_build_context_synchronously
+    postConfirmDate(context, date: "2023-12-22", studentId: "1");
+
+    final data = await getCalendarData(
+      context,
+      date: "2023-12-01",
+      studentId: "1",
+    );
+
     tts.setCompletionHandler(() {
-      const String date = "2023-12-01";
-      const String studentId = "1";
-      getCalendarData(
-        context,
-        date: date,
-        studentId: studentId,
+      // const String date = "2023-12-01";
+      // const String studentId = "1";
+      // // getCalendarData(
+      // //   context,
+      // //   date: date,
+      // //   studentId: studentId,
+      // // );
+      Future.delayed(
+        const Duration(seconds: 1),
+        () {
+          if (!context.mounted) return;
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (ctx) => CalendarPage(data: data),
+            ),
+          );
+        },
       );
-      // Future.delayed(
-      //   const Duration(seconds: 1),
-      //   () {
-      //     if (!context.mounted) return;
-      //     Navigator.of(context).push(
-      //       MaterialPageRoute(
-      //         builder: (ctx) => const CalendarPage(),
-      //       ),
-      //     );
-      //   },
-      // );
     });
   }
 
