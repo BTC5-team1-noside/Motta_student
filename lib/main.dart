@@ -5,14 +5,14 @@ import 'package:student/screens/game_screen.dart';
 
 void main() {
   const app = MyApp();
-  //device_preview用
-  final devicePreview = DevicePreview(
-    builder: (_) => app,
-  );
-  runApp(devicePreview);
+  // //device_preview用
+  // final devicePreview = DevicePreview(
+  //   builder: (_) => app,
+  // );
+  // runApp(devicePreview);
 
-  //// simulator用
-  //runApp(app);
+  // simulator用
+  runApp(app);
 }
 
 class MyApp extends StatelessWidget {

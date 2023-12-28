@@ -25,6 +25,7 @@ class GameScreen extends StatelessWidget {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
+      debugPrint("${data["selectedDate"]}");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
       penguinVoice.onPlayerStateChanged.listen((event) {
