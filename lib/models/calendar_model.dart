@@ -11,7 +11,7 @@ class CalendarModel extends ChangeNotifier {
   }
 
   DateTime get firstDayOfMonth =>
-      DateTime(focusedDay.year - 1, focusedDay.month, 1);
+      DateTime(focusedDay.year, focusedDay.month, 1);
   // DateTime get firstDayOfMonth => DateTime(now.year, now.month, 1);
 
   DateTime get lastDayOfMonth =>
@@ -26,13 +26,13 @@ class CalendarModel extends ChangeNotifier {
     }
   }
 
-  // void onMonthChanged(DateTime day) {
-  //   // フォーカスされている日を更新
-  //   focusedDay = DateTime(focusedDay.year, focusedDay.month - 1, 1);
-  //   // ここで新しい月のデータをフェッチするロジックを追加できます
-  //   // 例: fetchScheduleForMonth(focusedDay.month);
-  //   notifyListeners(); // UIを更新
-  // }
+  void onMonthChanged(DateTime day) {
+    // フォーカスされている日を更新
+    // focusedDay = DateTime(focusedDay.year, focusedDay.month - 1, 1);
+    // ここで新しい月のデータをフェッチするロジックを追加できます
+    // 例: fetchScheduleForMonth(focusedDay.month);
+    notifyListeners(); // UIを更新
+  }
 
   List<dynamic> fetchScheduleForDay(DateTime dateTime) {
     final schedule = {

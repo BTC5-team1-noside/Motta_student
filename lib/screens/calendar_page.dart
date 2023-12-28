@@ -63,7 +63,7 @@ class CalendarPage extends StatelessWidget {
                     firstDay: model.firstDayOfMonth,
                     lastDay: model.lastDayOfMonth,
                     locale: Localizations.localeOf(context).languageCode,
-                    rowHeight: 100,
+                    rowHeight: 120,
                     daysOfWeekHeight: 60,
                     headerStyle: HeaderStyle(
                       titleTextStyle: const TextStyle(
@@ -79,7 +79,8 @@ class CalendarPage extends StatelessWidget {
                       rightChevronVisible: true,
                     ),
                     onPageChanged: (focusedDay) {
-                      focusedDay = focusedDay;
+                      // model.onMonthChanged(focusedDay);
+
                       debugPrint("$focusedDay");
                     },
                     calendarStyle: const CalendarStyle(
@@ -90,7 +91,7 @@ class CalendarPage extends StatelessWidget {
                       defaultBuilder: (context, date, events) {
                         return Container(
                           margin: const EdgeInsets.all(4.0),
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(2),
                           alignment: Alignment.topCenter,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -106,38 +107,50 @@ class CalendarPage extends StatelessWidget {
                           ),
                         );
                       },
-                      disabledBuilder: (context, date, events) {
-                        return Container(
-                          margin: const EdgeInsets.all(4.0),
-                          padding: const EdgeInsets.all(5),
-                          alignment: Alignment.topCenter,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            border: Border.all(width: 1),
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Text(
-                            '${date.day}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 21,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      },
+                      // disabledBuilder: (context, date, events) {
+                      //   return Container(
+                      //     margin: const EdgeInsets.all(4.0),
+                      //     padding: const EdgeInsets.all(5),
+                      //     alignment: Alignment.topCenter,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.grey,
+                      //       border: Border.all(width: 1),
+                      //       borderRadius: BorderRadius.circular(10.0),
+                      //     ),
+                      //     child: Text(
+                      //       '${date.day}',
+                      //       style: const TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: 21,
+                      //         fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   );
+                      // },
                       // selectedBuilder: customCalendarBuilders.selectedBuilder,
                       markerBuilder: (context, date, events) {
                         String dateOnly = DateFormat("yyyy-MM-dd").format(date);
-                        if (data.contains(dateOnly)) {
-                          return const Positioned(
-                            right: 35,
-                            bottom: 35,
-                            child: Icon(
-                              Icons.check_circle,
-                              color: Colors.green,
-                            ),
-                          );
+                        debugPrint("$date");
+                        String yearMonth = "2023-12";
+//date 2023-12-01に対し、focusedDay 2023-12が合致するかどうか
+                        bool containsYearMonth = dateOnly.startsWith(yearMonth);
+                        debugPrint("$containsYearMonth"); // trueかfalseを出力します。
+                        if (data.contains(dateOnly) &&
+                            dateOnly.startsWith(yearMonth)) {
+                          return Positioned(
+                              top: 1,
+                              child: Image.asset(
+                                  'assets/images/stamps/bison.PNG'));
+                          // return Center(
+                          //   child: Column(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //     children: [
+                          //       Image.asset(
+                          //         'assets/images/stamps/bison.PNG',
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
                         }
                         return null;
                       },
