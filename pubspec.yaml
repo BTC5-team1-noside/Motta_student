@@ -71,6 +71,7 @@ flutter:
     - assets/images/chick/
     - assets/images/hamster/
     - assets/images/penguin/
+    - assets/images/stamps/
     - assets/sounds/
 
   #   - images/a_dot_ham.jpeg
