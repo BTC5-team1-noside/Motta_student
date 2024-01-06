@@ -81,7 +81,7 @@ class CalendarPage extends StatelessWidget {
                     onPageChanged: (focusedDay) {
                       // model.onMonthChanged(focusedDay);
 
-                      debugPrint("$focusedDay");
+                      // debugPrint("$focusedDay");
                     },
                     calendarStyle: const CalendarStyle(
                       defaultTextStyle: TextStyle(fontSize: 21),
@@ -130,13 +130,14 @@ class CalendarPage extends StatelessWidget {
                       // selectedBuilder: customCalendarBuilders.selectedBuilder,
                       markerBuilder: (context, date, events) {
                         String dateOnly = DateFormat("yyyy-MM-dd").format(date);
-                        debugPrint("$date");
-                        String yearMonth = "2023-12";
-//date 2023-12-01に対し、focusedDay 2023-12が合致するかどうか
-                        bool containsYearMonth = dateOnly.startsWith(yearMonth);
-                        debugPrint("$containsYearMonth"); // trueかfalseを出力します。
-                        if (data.contains(dateOnly) &&
-                            dateOnly.startsWith(yearMonth)) {
+                        // debugPrint("$date");
+                        // String yearMonth = "2024-01";
+// //date 2023-12-01に対し、focusedDay 2023-12が合致するかどうか
+//                         bool containsYearMonth = dateOnly.startsWith(yearMonth);
+//                         debugPrint("$containsYearMonth"); // trueかfalseを出力します。
+                        if (data.contains(dateOnly)) {
+                          // if (data.contains(dateOnly) &&
+                          //     dateOnly.startsWith(yearMonth)) {
                           return Positioned(
                               top: 1,
                               child: Image.asset(

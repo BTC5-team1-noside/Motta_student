@@ -8,6 +8,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "audio_session",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/audio_session-0.1.18",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "audioplayers",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/audioplayers-5.2.1",
       "packageUri": "lib/",
@@ -123,7 +129,7 @@
     },
     {
       "name": "flutter",
-      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.13.6/flutter/packages/flutter",
+      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.4/flutter/packages/flutter",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -135,7 +141,7 @@
     },
     {
       "name": "flutter_localizations",
-      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.13.6/flutter/packages/flutter_localizations",
+      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.4/flutter/packages/flutter_localizations",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -147,7 +153,7 @@
     },
     {
       "name": "flutter_test",
-      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.13.6/flutter/packages/flutter_test",
+      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.4/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -159,7 +165,7 @@
     },
     {
       "name": "flutter_web_plugins",
-      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.13.6/flutter/packages/flutter_web_plugins",
+      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.4/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -204,6 +210,24 @@
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/json_annotation-4.8.1",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "just_audio",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/just_audio-0.9.36",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "just_audio_platform_interface",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/just_audio_platform_interface-4.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "just_audio_web",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/just_audio_web-0.4.9",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "lints",
@@ -308,6 +332,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "rxdart",
+      "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shared_preferences",
       "rootUri": "file:///Users/user/.pub-cache/hosted/pub.dev/shared_preferences-2.2.2",
       "packageUri": "lib/",
@@ -357,7 +387,7 @@
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.13.6/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///opt/homebrew/Caskroom/flutter/3.16.4/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -512,7 +542,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2023-12-28T14:19:18.023200Z",
+  "generated": "2024-01-05T10:14:22.314814Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }
