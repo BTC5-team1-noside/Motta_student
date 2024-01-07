@@ -33,8 +33,9 @@ class _ReadyScreenState extends State<ReadyScreen> {
 
   Future<void> synthesizeVoice(text) async {
     var dynamicUrl =
-        "https://fb73-133-106-63-3.ngrok-free.app"; //ここのアドレスがエンジンを立ち上げ直す毎に変わるよ！！
+        "https://d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app"; //ここのアドレスがエンジンを立ち上げ直す毎に変わるよ！！
     var url = '$dynamicUrl/audio_query?text=$text&speaker=32';
+
     var response = await http.post(
       Uri.parse(url),
       headers: {
@@ -45,16 +46,21 @@ class _ReadyScreenState extends State<ReadyScreen> {
       }),
     );
     if (response.statusCode == 200) {
+      debugPrint("レスポンス帰ってきてる？");
       var body = json.decode(response.body);
       var audioQuery = body;
 
+      // debugPrint("$audioQuery");
+
       // 生成したクエリを使って実際に音声を生成する
-      var synthesisHost = 'localhost:50021';
-      var synthesisPath = '/synthesis';
+      // var synthesisHost = dynamicUrl;
+      // var synthesisPath = '/synthesis';
+
+      debugPrint("ここまでおっけー？");
       var synthesisResponse = await http.post(
-        Uri.http(
-          synthesisHost,
-          synthesisPath,
+        Uri.https(
+          "d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app",
+          "/synthesis",
           {
             "speaker": "32", //speakerのvalueを変更することで話者を変更
           },
@@ -64,9 +70,14 @@ class _ReadyScreenState extends State<ReadyScreen> {
         },
         body: json.encode(audioQuery),
       );
+
+      debugPrint("if文おわり");
+      debugPrint("ステータスコードは：${synthesisResponse.statusCode}");
+
       if (synthesisResponse.statusCode == 200) {
+        debugPrint("200きてる？");
         final data = synthesisResponse.bodyBytes;
-        // debugPrint("$data");
+        debugPrint("$data");
 
         playVoiceFromData(data);
         debugPrint('音声生成成功!');
