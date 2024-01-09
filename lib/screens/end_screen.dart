@@ -5,7 +5,7 @@ import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 import "package:http/http.dart" as http;
 import "dart:convert";
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 
 class EndScreen extends StatefulWidget {
   const EndScreen({super.key, required this.tts});
@@ -26,27 +26,17 @@ class _EndScreenState extends State<EndScreen> {
   }
 
   Future<List<dynamic>> getCalendarData(BuildContext context,
-      {String date = "2023-12-01", String studentId = "1"}) async {
+      {String date = "2023-01-01", String studentId = "1"}) async {
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/confirms-history", {
       "student_id": studentId,
       "date": date,
     });
     try {
-      // data fetching
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
-      final addData1 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 30));
-      final addData2 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 28));
-      final addData3 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 26));
-      final addData4 = DateFormat("yyyy-MM-dd").format(DateTime(2023, 11, 20));
-      data.add(addData1);
-      data.add(addData2);
-      data.add(addData3);
-      data.add(addData4);
-      debugPrint("$data");
-      // data.push(DateTime(2023, 11, 30));
+
       return data;
     } catch (error) {
       debugPrint(error.toString());
@@ -85,11 +75,11 @@ class _EndScreenState extends State<EndScreen> {
     await tts.speak(text);
 
     // ignore: use_build_context_synchronously
-    postConfirmDate(context, date: "2023-12-22", studentId: "1");
+    postConfirmDate(context, date: "2024-01-01", studentId: "1");
 
     final data = await getCalendarData(
       context,
-      date: "2023-12-01",
+      date: "2024-01-01",
       studentId: "1",
     );
 

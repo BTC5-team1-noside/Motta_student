@@ -43,6 +43,7 @@ dependencies:
   table_calendar:
   intl:
   provider:
+  just_audio:
 
 dev_dependencies:
   flutter_test:
