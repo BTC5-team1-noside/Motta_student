@@ -1,7 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 // import 'package:student/screens/calendar_page.dart';
-import 'package:student/screens/game_screen.dart';
+import 'package:student/screens/student_login.dart';
 // import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -28,10 +28,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       // home: CalendarPage(),
-      home: GameScreen(),
+      // home: GameScreen(),
+      home: LoginScreen(),
     );
   }
 }
