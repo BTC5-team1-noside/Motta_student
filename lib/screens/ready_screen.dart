@@ -58,7 +58,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
   List<String> createVoiceDate() {
     // 読み上げtextと生成
     List<String> arrText = [];
-    for (int index = 0; index < _subjects.length; index++) {
+    for (int index = 0; index < _subjects.length + 1; index++) {
       String txt = "";
       if (index < _subjects.length) {
         txt +=
