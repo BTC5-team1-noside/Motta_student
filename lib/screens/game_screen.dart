@@ -5,8 +5,8 @@ import "package:http/http.dart" as http;
 import "dart:convert";
 
 import 'package:student/screens/ready_screen.dart';
-import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
+import "package:student/widgets/voiceBoxApi.dart";
 
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
@@ -14,7 +14,10 @@ class GameScreen extends StatelessWidget {
   final AudioPlayer penguinVoice = AudioPlayer();
   final AudioPlayer bgm = AudioPlayer();
 
-  void _startButton(BuildContext context, {String date = "2024-01-12"}) async {
+  final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
+  var readyVoice;
+
+  void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
     await bgm.setVolume(0.1);
     await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
 
@@ -28,13 +31,15 @@ class GameScreen extends StatelessWidget {
       debugPrint("${data["selectedDate"]}");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
+      ///
       penguinVoice.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) return;
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (ctx) => ReadyScreen(belongings: dataFromJson)),
+                  builder: (ctx) => ReadyScreen(
+                      belongings: dataFromJson, readyVoice: readyVoice)),
             );
           });
         }
@@ -55,22 +60,30 @@ class GameScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: const AppBarMotta(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Image.asset("assets/images/start_page.png"),
-            // Image.asset("assets/images/chick/chick.gif"),
-            // Image.asset("assets/images/hamster/hamster.gif"),
-            SizedBox(
-              height: 100,
-              child: ElevatedButtonWithStyle("もちものかくにん　はじめ", () {
-                const String date = "2024-01-12";
-                _startButton(context, date: date);
-              }),
-            ),
-          ],
+      // appBar: const AppBarMotta(),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/start_page.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const SizedBox(
+                height: 700,
+              ),
+              SizedBox(
+                height: 100,
+                child: ElevatedButtonWithStyle("もちものかくにん　はじめ", () {
+                  const String date = "2024-01-12";
+                  _startButton(context, date: date);
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -18,6 +18,8 @@ class _EndScreenState extends State<EndScreen> {
   // late FlutterTts tts = FlutterTts();
   late FlutterTts tts;
   final String text = "ぜんぶかくにんできたね\nすごいぞ!\nキャッホー";
+  final int _id = 1;
+
   @override
   void initState() {
     super.initState();
@@ -116,10 +118,10 @@ class _EndScreenState extends State<EndScreen> {
     return Scaffold(
       appBar: const AppBarMotta(),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-                'assets/images/end_background.PNG'), // 배경으로 사용할 이미지 경로
+                'assets/images/char$_id/end_background.PNG'), // 배경으로 사용할 이미지 경로
             fit: BoxFit.cover,
           ),
         ),
@@ -127,7 +129,7 @@ class _EndScreenState extends State<EndScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset("assets/images/penguin/penguin_end.jpg"),
+              Image.asset("assets/images/char$_id/character_end.jpg"),
               BodyText(text: text),
             ],
           ),

@@ -33,6 +33,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool answered = false;
   bool isListening = false;
   bool isOnce = false;
+  final int _id = 1;
 
   // instance
   late FlutterTts tts;
@@ -200,7 +201,8 @@ class _PlayScreenState extends State<PlayScreen> {
     }
 
     if (!answered) {
-      backgroundPicture = const AssetImage('assets/images/background.PNG');
+      backgroundPicture =
+          AssetImage('assets/images/char$_id/normal_background.PNG');
       bodyMain = [
         mainContent,
         const BodyText(text: "もった？"),
@@ -230,7 +232,8 @@ class _PlayScreenState extends State<PlayScreen> {
         )
       ];
     } else {
-      backgroundPicture = const AssetImage('assets/images/good_background.PNG');
+      backgroundPicture =
+          AssetImage('assets/images/char$_id/good_background.PNG');
       bodyMain = [const BodyText(text: "グッド！")];
       isOnce = false;
       Future.delayed(const Duration(seconds: 1), () {
@@ -262,7 +265,7 @@ class _PlayScreenState extends State<PlayScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset("assets/images/penguin/penguin10f.gif"),
+              Image.asset("assets/images/char$_id/character.gif"),
               ...bodyMain,
             ],
           ),

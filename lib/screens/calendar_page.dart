@@ -11,6 +11,7 @@ class CalendarPage extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final List<dynamic> data;
   const CalendarPage({super.key, required this.data});
+  final int _id = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +142,7 @@ class CalendarPage extends StatelessWidget {
                           return Positioned(
                               top: 1,
                               child: Image.asset(
-                                  'assets/images/stamps/bison.PNG'));
+                                  'assets/images/stamps/char$_id.PNG'));
                           // return Center(
                           //   child: Column(
                           //     mainAxisAlignment: MainAxisAlignment.spaceBetween,

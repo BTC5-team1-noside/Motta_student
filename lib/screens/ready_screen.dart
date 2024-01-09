@@ -11,7 +11,10 @@ import 'dart:convert';
 import 'dart:io';
 
 class ReadyScreen extends StatefulWidget {
-  const ReadyScreen({super.key, required this.belongings});
+  const ReadyScreen({
+    super.key,
+    required this.belongings,
+  });
 
   final DayBelongings belongings;
 
@@ -21,72 +24,16 @@ class ReadyScreen extends StatefulWidget {
 
 class _ReadyScreenState extends State<ReadyScreen> {
   final AudioPlayer audioPlayer = AudioPlayer();
-  void playVoiceFromData(Uint8List data) async {
-    final source = MyStreamAudioSource(data);
-    await audioPlayer.setAudioSource(source);
-    audioPlayer.play();
-  }
 
+  final int _id = 1;
   late DayBelongings _belongings;
   late FlutterTts tts = FlutterTts();
   final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
 
-  Future<void> synthesizeVoice(text) async {
-    var dynamicUrl =
-        "https://d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app"; //ここのアドレスがエンジンを立ち上げ直す毎に変わるよ！！
-    var url = '$dynamicUrl/audio_query?text=$text&speaker=32';
-
-    var response = await http.post(
-      Uri.parse(url),
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: json.encode({
-        'text': text,
-      }),
-    );
-    if (response.statusCode == 200) {
-      debugPrint("レスポンス帰ってきてる？");
-      var body = json.decode(response.body);
-      var audioQuery = body;
-
-      // debugPrint("$audioQuery");
-
-      // 生成したクエリを使って実際に音声を生成する
-      // var synthesisHost = dynamicUrl;
-      // var synthesisPath = '/synthesis';
-
-      debugPrint("ここまでおっけー？");
-      var synthesisResponse = await http.post(
-        Uri.https(
-          "d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app",
-          "/synthesis",
-          {
-            "speaker": "32", //speakerのvalueを変更することで話者を変更
-          },
-        ),
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-        },
-        body: json.encode(audioQuery),
-      );
-
-      debugPrint("if文おわり");
-      debugPrint("ステータスコードは：${synthesisResponse.statusCode}");
-
-      if (synthesisResponse.statusCode == 200) {
-        debugPrint("200きてる？");
-        final data = synthesisResponse.bodyBytes;
-        debugPrint("$data");
-
-        playVoiceFromData(data);
-        debugPrint('音声生成成功!');
-      } else {
-        debugPrint('音声生成失敗: ${synthesisResponse.reasonPhrase}');
-      }
-    } else {
-      debugPrint('クエリ生成失敗: ${response.reasonPhrase}');
-    }
+  void playVoiceFromData(data) async {
+    final source = MyStreamAudioSource(data);
+    await audioPlayer.setAudioSource(source);
+    audioPlayer.play();
   }
 
   @override
@@ -104,7 +51,8 @@ class _ReadyScreenState extends State<ReadyScreen> {
       "name": "O-Ren",
       "locale": "ja-JP",
     });
-    await synthesizeVoice(text);
+
+    // playVoiceFromData(readyVoice);
 
     // オーディオの終了を検知します。
     audioPlayer.playerStateStream.listen((state) {
@@ -149,9 +97,9 @@ class _ReadyScreenState extends State<ReadyScreen> {
     return Scaffold(
       appBar: const AppBarMotta(),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background.PNG'),
+            image: AssetImage('assets/images/char$_id/normal_background.PNG'),
             fit: BoxFit.cover,
           ),
         ),
@@ -159,7 +107,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Image.asset("assets/images/penguin/penguin.jpg"),
+              Image.asset("assets/images/char$_id/character.jpg"),
               // Image.asset("assets/images/chick/chick.gif"),
               // Image.asset("assets/images/hamster/hamster.gif"),
               const SizedBox(
@@ -175,7 +123,7 @@ class _ReadyScreenState extends State<ReadyScreen> {
 }
 
 class MyStreamAudioSource extends StreamAudioSource {
-  final Uint8List audioData;
+  final audioData;
 
   MyStreamAudioSource(this.audioData);
 
@@ -186,7 +134,7 @@ class MyStreamAudioSource extends StreamAudioSource {
 
     return StreamAudioResponse(
       sourceLength: audioData.length,
-      contentLength: end - start,
+      contentLength: end! - start,
       offset: start,
       contentType: "audio/mpeg",
       stream: Stream.value(audioData.sublist(start, end)),
