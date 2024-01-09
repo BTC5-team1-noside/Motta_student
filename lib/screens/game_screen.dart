@@ -11,15 +11,14 @@ import "package:student/widgets/voiceBoxApi.dart";
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
 
-  final AudioPlayer penguinVoice = AudioPlayer();
+  final AudioPlayer characterVoice = AudioPlayer();
   final AudioPlayer bgm = AudioPlayer();
 
   final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
-  var readyVoice;
 
   void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
     await bgm.setVolume(0.1);
-    await penguinVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
+    await characterVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/timetables-history/$date");
@@ -32,14 +31,16 @@ class GameScreen extends StatelessWidget {
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
       ///
-      penguinVoice.onPlayerStateChanged.listen((event) {
+      characterVoice.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) return;
             Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (ctx) => ReadyScreen(
-                      belongings: dataFromJson, readyVoice: readyVoice)),
+                        belongings: dataFromJson,
+                        characterVoice: characterVoice,
+                      )),
             );
           });
         }
