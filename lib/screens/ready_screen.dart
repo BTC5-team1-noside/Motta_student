@@ -2,14 +2,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/play_screen.dart';
-import "package:flutter_tts/flutter_tts.dart";
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
-import 'dart:typed_data';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 import 'package:student/widgets/apis.dart';
 
 class ReadyScreen extends StatelessWidget {
@@ -38,7 +33,6 @@ class ReadyScreen extends StatelessWidget {
     final List additionalItems = belongings.additionalItems;
 
     List<String> createVoiceDate() {
-      // 読み上げtextと生成
       List<String> arrText = [];
       for (int index = 0; index < subjects.length + 1; index++) {
         String txt = "";
@@ -69,22 +63,12 @@ class ReadyScreen extends StatelessWidget {
       return arrText;
     }
 
-    // void test() {
-    //   voiceData = textList.map(
-    //    (e) async {
-    //       return await synthesizeVoice(e);
-
-    //   }).toList();
-    // }
-
     void splitVoiceData() async {
       voiceData = await synthesizeVoice(textList[0]);
       print(voiceData);
     }
 
     Future<void> speak() async {
-      // playVoiceFromData(readyVoice);
-
       await characterVoice.play(AssetSource('sounds/ready_char$id.wav'),
           volume: 0.3);
 
@@ -128,8 +112,6 @@ class ReadyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Image.asset("assets/images/char$id/character.jpg"),
-              // Image.asset("assets/images/chick/chick.gif"),
-              // Image.asset("assets/images/hamster/hamster.gif"),
               const SizedBox(
                 height: 100,
               ),

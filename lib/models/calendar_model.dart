@@ -13,22 +13,4 @@ class CalendarModel extends ChangeNotifier {
 
   DateTime get lastDayOfMonth =>
       DateTime(focusedDay.year, focusedDay.month + 1, 0);
-
-  // void selectDay(DateTime selectedDay, DateTime focusedDay) {
-  //   if (!isSameDay(this.selectedDay, selectedDay)) {
-  //     this.selectedDay = selectedDay;
-  //     this.focusedDay = focusedDay;
-  //     notifyListeners();
-  //   }
-  // }
-
-  // List<dynamic> fetchScheduleForDay(DateTime dateTime) {
-  //   final schedule = {
-  //     '1': ['on', 'off'],
-  //     '2': ['off', 'on'],
-  //     '3': ['on', 'on'],
-  //     '4': ['on', 'on'],
-  //   };
-  //   return schedule[dateTime.day.toString()] ?? [null, null];
-  // }
 }

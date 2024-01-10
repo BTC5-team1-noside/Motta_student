@@ -5,7 +5,6 @@ import 'package:student/models/belongings.dart';
 import "package:http/http.dart" as http;
 import 'package:student/screens/calendar_page.dart';
 import "dart:convert";
-
 import 'package:student/screens/ready_screen.dart';
 import 'package:student/widgets/apis.dart';
 import 'package:student/widgets/appbar_motta.dart';
@@ -28,25 +27,24 @@ class GameScreen extends StatelessWidget {
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/timetables-history/$date");
     try {
-      // data fetching
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
       debugPrint("${data["selectedDate"]}");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
-      ///
       characterVoice.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) return;
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (ctx) => ReadyScreen(
-                        belongings: dataFromJson,
-                        studentId: studentId,
-                        date: date,
-                      )),
+                builder: (ctx) => ReadyScreen(
+                  belongings: dataFromJson,
+                  studentId: studentId,
+                  date: date,
+                ),
+              ),
             );
           });
         }
