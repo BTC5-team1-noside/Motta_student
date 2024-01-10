@@ -4,11 +4,11 @@ import 'package:flutter_tts/flutter_tts.dart';
 class ListTileWithSpeak extends StatelessWidget {
   const ListTileWithSpeak({
     super.key,
-    required this.tts,
+    // required this.tts,
     required this.item,
   });
 
-  final FlutterTts tts;
+  // final FlutterTts tts;
   final String item;
 
   @override
@@ -22,7 +22,7 @@ class ListTileWithSpeak extends StatelessWidget {
           ),
         ),
         onTap: () async {
-          await tts.speak(item);
+          // await tts.speak(item);
         });
   }
 }
