@@ -65,7 +65,7 @@ class ReadyScreen extends StatelessWidget {
           arrText.add(txt);
         }
       }
-      print(arrText);
+      debugPrint("ready_screen line 68:$arrText");
       return arrText;
     }
 
