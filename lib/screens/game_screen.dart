@@ -10,7 +10,7 @@ import 'package:student/widgets/elevated_button_with_style.dart';
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
 
-  AudioPlayer characterVoice = AudioPlayer();
+  final AudioPlayer characterVoice = AudioPlayer();
   final AudioPlayer bgm = AudioPlayer();
 
   final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
@@ -39,7 +39,6 @@ class GameScreen extends StatelessWidget {
               MaterialPageRoute(
                   builder: (ctx) => ReadyScreen(
                         belongings: dataFromJson,
-                        characterVoice: characterVoice,
                       )),
             );
           });

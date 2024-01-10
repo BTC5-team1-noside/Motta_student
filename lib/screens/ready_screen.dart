@@ -5,26 +5,25 @@ import 'package:student/screens/play_screen.dart';
 import "package:flutter_tts/flutter_tts.dart";
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
-// import "package:just_audio/just_audio.dart";
-// import 'dart:typed_data';
-// import 'package:http/http.dart' as http;
-// import 'dart:convert';
-// import 'dart:io';
+import 'package:student/widgets/elevated_button_with_style.dart';
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 import "package:student/widgets/voiceBoxApi.dart";
 
 class ReadyScreen extends StatelessWidget {
   const ReadyScreen({
     super.key,
     required this.belongings,
-    required this.characterVoice,
   });
 
   final DayBelongings belongings;
-  final AudioPlayer characterVoice;
 
   @override
   Widget build(BuildContext context) {
     final FlutterTts tts = FlutterTts();
+    final AudioPlayer characterVoice = AudioPlayer();
     const int id = 1;
     late List textList;
     late List voiceData;
@@ -34,48 +33,60 @@ class ReadyScreen extends StatelessWidget {
     final List items = belongings.items;
     final List additionalItems = belongings.additionalItems;
 
-    // List<String> createVoiceDate() {
-    //   // 読み上げtextと生成
-    //   List<String> arrText = [];
-    //   for (int index = 0; index < subjects.length + 1; index++) {
-    //     String txt = "";
-    //     if (index < subjects.length) {
-    //       txt +=
-    //           "${subjects[index].period} じかんめ、 ${subjects[index].subject}だよ！,\n";
-    //       for (int i = 0; i < subjects[index].belongings.length; i++) {
-    //         txt += "${subjects[index].belongings[i]}。、。";
-    //       }
-    //       txt += "もった？";
-    //       arrText.add(txt);
-    //     } else {
-    //       txt += "いつもの。";
-    //       for (int j = 0; j < items.length; j++) {
-    //         txt += "${items[j]}。、。";
-    //       }
-    //       if (additionalItems.isNotEmpty) {
-    //         txt += "あと。";
-    //         for (int k = 0; k < additionalItems.length; k++) {
-    //           txt += "${additionalItems[k]}も。、。";
-    //         }
-    //       }
-    //       txt += "もった？";
-    //       arrText.add(txt);
-    //     }
-    //   }
-    //   print(arrText);
-    //   return arrText;
-    // }
+    List<String> createVoiceDate() {
+      // 読み上げtextと生成
+      List<String> arrText = [];
+      for (int index = 0; index < subjects.length + 1; index++) {
+        String txt = "";
+        if (index < subjects.length) {
+          txt +=
+              "${subjects[index].period} じかんめ、 ${subjects[index].subject}だよ！,\n";
+          for (int i = 0; i < subjects[index].belongings.length; i++) {
+            txt += "${subjects[index].belongings[i]}。、。";
+          }
+          txt += "もった？";
+          arrText.add(txt);
+        } else {
+          txt += "いつもの。";
+          for (int j = 0; j < items.length; j++) {
+            txt += "${items[j]}。、。";
+          }
+          if (additionalItems.isNotEmpty) {
+            txt += "あと。";
+            for (int k = 0; k < additionalItems.length; k++) {
+              txt += "${additionalItems[k]}も。、。";
+            }
+          }
+          txt += "もった？";
+          arrText.add(txt);
+        }
+      }
+      print(arrText);
+      return arrText;
+    }
 
     // void test() {
-    //   voiceData = textList.map((e) async {
-    //     return await synthesizeVoice(e);
+    //   voiceData = textList.map(
+    //    (e) async {
+    //       return await synthesizeVoice(e);
+
     //   }).toList();
     // }
+
+    void test() async {
+      List data = [];
+      for (var e in textList) {
+        var result = await synthesizeVoice(e);
+        data.add(result);
+      }
+      voiceData = data;
+      print(voiceData);
+    }
 
     Future<void> speak() async {
       // playVoiceFromData(readyVoice);
 
-      await characterVoice.play(AssetSource('sounds/ready_char1.wav'),
+      await characterVoice.play(AssetSource('sounds/ready_char1_.wav'),
           volume: 0.3);
 
       characterVoice.onPlayerStateChanged.listen((event) {
@@ -98,8 +109,8 @@ class ReadyScreen extends StatelessWidget {
       });
     }
 
-    // textList = createVoiceDate();
-    // test();
+    textList = createVoiceDate();
+    test();
     speak();
 
     return Scaffold(
@@ -130,8 +141,6 @@ class ReadyScreen extends StatelessWidget {
   }
 }
 
-
-
 // class ReadyScreen extends StatefulWidget {
 //   const ReadyScreen({
 //     super.key,
@@ -156,7 +165,6 @@ class ReadyScreen extends StatelessWidget {
 //   late List _additionalItems;
 //   late List textList;
 //   late List voiceData;
-
 
 //   late FlutterTts tts = FlutterTts();
 //   final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
@@ -215,8 +223,9 @@ class ReadyScreen extends StatelessWidget {
 //       if (event == PlayerState.completed) {
 //         Future.delayed(const Duration(milliseconds: 1200), () {
 //           if (!context.mounted) return;
-//           Navigator.of(context).push(MaterialPageRoute(
-//               builder: (ctx) => PlayScreen(belongings: _belongings, tts: tts)));
+//           print("finished?");
+//           // Navigator.of(context).push(MaterialPageRoute(
+//           //     builder: (ctx) => PlayScreen(belongings: _belongings, tts: tts)));
 //         });
 //       }
 //     });
@@ -252,6 +261,12 @@ class ReadyScreen extends StatelessWidget {
 
 //     characterVoice = widget.characterVoice;
 //     _speak();
+//   }
+
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     characterVoice.stop();
 //   }
 
 //   @override
