@@ -3,6 +3,8 @@ import "dart:io";
 import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
+import "package:just_audio/just_audio.dart";
+import "package:student/widgets/my_stream_audio_source.dart";
 
 Future synthesizeVoice(String text) async {
   String dynamicUrl =
@@ -52,5 +54,48 @@ Future synthesizeVoice(String text) async {
     }
   } else {
     debugPrint('クエリ生成失敗: ${response.reasonPhrase}');
+  }
+}
+
+void playVoiceFromData(
+    {required dynamic data, required AudioPlayer audioPlayer}) async {
+  final source = MyStreamAudioSource(data);
+  await audioPlayer.setAudioSource(source);
+  audioPlayer.play();
+}
+
+void postConfirmDate({String date = "2023-12-01", int studentId = 1}) async {
+  final url = Uri.https(
+      "motta-9dbb2df4f6d7.herokuapp.com", "/api/v1/student/confirms-history");
+  final reqBodyDate = {
+    "date": date,
+    "student_id": "$studentId",
+  };
+  final reqBodyDateJson = json.encode(reqBodyDate);
+  try {
+    // data fetching
+    await http.post(url,
+        headers: {"Content-Type": "application/json"}, body: reqBodyDateJson);
+  } catch (error) {
+    debugPrint(error.toString());
+  }
+}
+
+Future<List<dynamic>> getCalendarData(
+    {String date = "2023-01-01", int studentId = 1}) async {
+  final url = Uri.https(
+      "motta-9dbb2df4f6d7.herokuapp.com", "/api/v1/student/confirms-history", {
+    "student_id": "$studentId",
+    "date": date,
+  });
+  try {
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
+    final data = json.decode(response.body);
+
+    return data;
+  } catch (error) {
+    debugPrint(error.toString());
+    return [];
   }
 }

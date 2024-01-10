@@ -74,6 +74,7 @@ flutter:
     - assets/images/char3/
     - assets/images/char4/
     - assets/images/char5/
+    # - assets/images/char0/
     - assets/images/stamps/
     - assets/sounds/
 

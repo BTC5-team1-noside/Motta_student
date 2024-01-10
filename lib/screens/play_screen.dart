@@ -1,21 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:student/models/belongings.dart';
 import 'package:student/screens/end_screen.dart';
-import 'package:student/screens/game_screen.dart';
+import 'package:student/screens/student_login.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
-import "package:flutter_tts/flutter_tts.dart";
 import "package:student/widgets/list_tile_with_speak.dart";
+import 'package:student/widgets/apis.dart';
 
 class PlayScreen extends StatefulWidget {
-  const PlayScreen({super.key, required this.belongings, required this.tts});
+  const PlayScreen({
+    super.key,
+    required this.belongings,
+    required this.studentId,
+    required this.voiceData,
+    required this.voiceText,
+    required this.date,
+  });
 
   final DayBelongings belongings;
-  final FlutterTts tts;
+  final int studentId;
+  final dynamic voiceData;
+  final List voiceText;
+  final String date;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -27,6 +38,11 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _subjects;
   late List _items;
   late List _additionalItems;
+  late int _studentId;
+  late dynamic _voiceData;
+  late dynamic _downloadVoiceData;
+  late List _voiceText;
+  late String _date;
 
   //control flag
   int index = 0;
@@ -36,23 +52,25 @@ class _PlayScreenState extends State<PlayScreen> {
   final int _id = 1;
 
   // instance
-  late FlutterTts tts;
   SpeechToText speechToText = SpeechToText();
   Timer? _listeningTimer; //timerで一定時間過ぎて回答がないならもう一度読み上げるのを実装するかもしれないため、残しておく。
+  final AudioPlayer characterVoice = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    tts = widget.tts;
     _belongings = widget.belongings;
     _subjects = _belongings.subjects;
     _items = _belongings.items;
     _additionalItems = _belongings.additionalItems;
+    _studentId = widget.studentId;
+    _voiceData = widget.voiceData;
+    _voiceText = widget.voiceText;
+    _date = widget.date;
   }
 
   @override
   void dispose() {
-    tts.stop();
     _listeningTimer?.cancel();
     super.dispose();
   }
@@ -77,16 +95,6 @@ class _PlayScreenState extends State<PlayScreen> {
         },
         localeId: 'ja_JP', // 日本語の設定
       );
-
-      // 4秒後にリスニングを停止
-      // _listeningTimer = Timer(const Duration(seconds: 4), () {
-      //   if (isListening) {
-      //     speechToText.stop();
-      //     // setState(() {
-      //     isListening = false;
-      //     // });
-      //   }
-      // });
     }
   }
 
@@ -94,64 +102,34 @@ class _PlayScreenState extends State<PlayScreen> {
     if (isListening) {
       speechToText.stop();
       isListening = false;
-      // _listeningTimer?.cancel(); // タイマーが動いていたら停止
     }
   }
 
-  ///////////////////////////////////
+  Future<void> speak() async {
+    playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
+    if (index < _subjects.length) {
+      _downloadVoiceData = await synthesizeVoice(_voiceText[index + 1]);
+    }
 
-  ///////////////////////////////////
-  /// TTS
-
-  Future<void> speak(String text) async {
-    await tts.setLanguage("ja-JP");
-    // await tts.setPitch(1.3);
-    // await tts.setSpeechRate(0.8);
-    await tts.setVoice({
-      "name": "O-Ren",
-      "locale": "ja-JP",
-    });
-    await tts.speak(text);
-    tts.setCompletionHandler(() {
-      isOnce = true;
-      _startListening();
+    characterVoice.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        isOnce = true;
+        _voiceData = _downloadVoiceData;
+        _startListening();
+      }
     });
   }
-  /////////////////////////////////////
 
   @override
   Widget build(BuildContext context) {
     debugPrint("indexは、$index");
-    String text = "";
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
 
-    // 読み上げtextと生成
-    if (index < _subjects.length) {
-      text +=
-          "${_subjects[index].period} じかんめ、 ${_subjects[index].subject}だよ！,\n";
-      for (int i = 0; i < _subjects[index].belongings.length; i++) {
-        text += "${_subjects[index].belongings[i]}。、。";
-      }
-      text += "もった？";
-    } else {
-      text += "いつもの。";
-      for (int j = 0; j < _items.length; j++) {
-        text += "${_items[j]}。、。";
-      }
-      if (_additionalItems.isNotEmpty) {
-        text += "あと。";
-        for (int k = 0; k < _additionalItems.length; k++) {
-          text += "${_additionalItems[k]}も。、。";
-        }
-      }
-      text += "もった？";
-    }
-
     if (!isListening) {
       if (!answered) {
-        speak(text);
+        speak();
       }
     }
 
@@ -170,7 +148,8 @@ class _PlayScreenState extends State<PlayScreen> {
                 ),
               ),
               ..._subjects[index].belongings.map(
-                    (e) => ListTileWithSpeak(tts: tts, item: e),
+                    // (e) => ListTileWithSpeak(tts: tts, item: e),
+                    (e) => ListTileWithSpeak(item: e),
                   ),
             ],
           ),
@@ -190,10 +169,12 @@ class _PlayScreenState extends State<PlayScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              ..._items.map((e) => ListTileWithSpeak(tts: tts, item: e)),
+              // ..._items.map((e) => ListTileWithSpeak(tts: tts, item: e)),
+              ..._items.map((e) => ListTileWithSpeak(item: e)),
               if (_additionalItems.isNotEmpty)
                 ..._additionalItems
-                    .map((e) => ListTileWithSpeak(tts: tts, item: e)),
+                    // .map((e) => ListTileWithSpeak(tts: tts, item: e)),
+                    .map((e) => ListTileWithSpeak(item: e)),
             ],
           ),
         ),
@@ -213,7 +194,6 @@ class _PlayScreenState extends State<PlayScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButtonWithStyle("もった", () {
-              tts.stop();
               setState(() {
                 answered = true;
                 isOnce = false;
@@ -225,8 +205,8 @@ class _PlayScreenState extends State<PlayScreen> {
             }),
             ElevatedButtonWithStyle("やめる", () {
               // Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => GameScreen()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const LoginScreen()));
             })
           ],
         )
@@ -240,7 +220,12 @@ class _PlayScreenState extends State<PlayScreen> {
         if (index == _subjects.length) {
           if (!context.mounted) return;
           Navigator.of(context).push(
-            MaterialPageRoute(builder: (ctx) => EndScreen(tts: tts)),
+            MaterialPageRoute(
+              builder: (ctx) => EndScreen(
+                date: _date,
+                studentId: _studentId,
+              ),
+            ),
           );
         } else {
           setState(() {

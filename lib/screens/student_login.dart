@@ -9,7 +9,7 @@ Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
   DateTime currentDate = selectedDate ?? DateTime.now();
   final formattedDate = formatDate.format(currentDate);
   final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
-      "/api/v1/teacher/home/history", {"date": "2024-01-18"});
+      "/api/v1/teacher/home/history", {"date": "2024-01-22"});
   // final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
   //     "/api/v1/teacher/home/history", {"date": formattedDate});
 
@@ -38,6 +38,7 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
+          padding: const EdgeInsets.all(50),
           height: double.infinity,
           width: double.infinity,
           color: const Color.fromARGB(255, 255, 255, 255),
@@ -69,8 +70,8 @@ class LoginScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  // GameScreen(student_id: el["student_id"]),
-                                  GameScreen(),
+                                  GameScreen(studentId: el["student_id"]),
+                              // GameScreen(),
                             ),
                           );
                         },

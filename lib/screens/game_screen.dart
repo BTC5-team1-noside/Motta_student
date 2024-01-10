@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:intl/intl.dart';
 import 'package:student/models/belongings.dart';
 import "package:http/http.dart" as http;
+import 'package:student/screens/calendar_page.dart';
 import "dart:convert";
 
 import 'package:student/screens/ready_screen.dart';
+import 'package:student/widgets/apis.dart';
+import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
 
 class GameScreen extends StatelessWidget {
-  GameScreen({super.key});
+  GameScreen({super.key, required this.studentId});
 
+  final int studentId;
   final AudioPlayer characterVoice = AudioPlayer();
   final AudioPlayer bgm = AudioPlayer();
 
@@ -39,6 +44,8 @@ class GameScreen extends StatelessWidget {
               MaterialPageRoute(
                   builder: (ctx) => ReadyScreen(
                         belongings: dataFromJson,
+                        studentId: studentId,
+                        date: date,
                       )),
             );
           });
@@ -60,7 +67,7 @@ class GameScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      // appBar: const AppBarMotta(),
+      appBar: const AppBarMotta(),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -73,13 +80,38 @@ class GameScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               const SizedBox(
-                height: 700,
+                height: 900,
               ),
               SizedBox(
                 height: 100,
                 child: ElevatedButtonWithStyle("もちものかくにん　はじめ", () {
-                  const String date = "2024-01-12";
-                  _startButton(context, date: date);
+                  final formatDate = DateFormat("yyyy-MM-dd");
+                  DateTime currentDate = DateTime.now();
+                  final formattedDate = formatDate.format(currentDate);
+                  // _startButton(context, date: formattedDate);
+                  _startButton(context, date: "2024-01-22");
+                }),
+              ),
+              SizedBox(
+                height: 50,
+                child: ElevatedButtonWithStyle("かれんだーかくにん", () async {
+                  final formatDate = DateFormat("yyyy-MM-dd");
+                  DateTime currentDate = DateTime.now();
+                  final formattedDate = formatDate.format(currentDate);
+
+                  final data = await getCalendarData(
+                    date: formattedDate,
+                    studentId: studentId,
+                  );
+                  if (!context.mounted) return;
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => CalendarPage(
+                        data: data,
+                        studentId: studentId,
+                      ),
+                    ),
+                  );
                 }),
               ),
             ],

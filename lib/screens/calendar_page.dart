@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:student/models/calendar_model.dart';
 import 'package:student/screens/game_screen.dart';
+import 'package:student/screens/student_login.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
 // import 'package:student/widgets/custom_calendar_builders.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -10,11 +11,12 @@ import 'package:table_calendar/table_calendar.dart';
 class CalendarPage extends StatelessWidget {
   // ignore: prefer_typing_uninitialized_variables
   final List<dynamic> data;
-  const CalendarPage({super.key, required this.data});
-  final int _id = 1;
+  const CalendarPage({super.key, required this.data, required this.studentId});
+  final int studentId;
 
   @override
   Widget build(BuildContext context) {
+    final int id = studentId % 5 == 0 ? 5 : studentId % 5;
     return ChangeNotifierProvider<CalendarModel>(
       create: (_) => CalendarModel()..init(),
       child: Consumer<CalendarModel>(builder: (context, model, snapshot) {
@@ -142,7 +144,7 @@ class CalendarPage extends StatelessWidget {
                           return Positioned(
                               top: 1,
                               child: Image.asset(
-                                  'assets/images/stamps/char$_id.PNG'));
+                                  'assets/images/stamps/char$id.PNG'));
                           // return Center(
                           //   child: Column(
                           //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +171,7 @@ class CalendarPage extends StatelessWidget {
                       if (!context.mounted) return;
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (ctx) => GameScreen(),
+                          builder: (ctx) => const LoginScreen(),
                         ),
                       );
                     },
