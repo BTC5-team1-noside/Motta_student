@@ -81,6 +81,8 @@ class _PlayScreenState extends State<PlayScreen> {
         onResult: (result) {
           if (result.recognizedWords.contains("持った")) {
             debugPrint("$result");
+            soundEffect.setAsset("sounds/good.mp3");
+            soundEffect.play();
             _stopListening();
             if (isOnce == true) {
               setState(() {
@@ -205,6 +207,8 @@ class _PlayScreenState extends State<PlayScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButtonWithStyle("もった", () {
+                soundEffect.setAsset("sounds/good.mp3");
+                soundEffect.play();
                 setState(() {
                   answered = true;
                   isOnce = false;
@@ -241,6 +245,8 @@ class _PlayScreenState extends State<PlayScreen> {
       Future.delayed(const Duration(seconds: 1), () {
         if (index == _subjects.length) {
           if (!context.mounted) return;
+          soundEffect.setAsset("sounds/complete.mp3");
+          soundEffect.play();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => EndScreen(
