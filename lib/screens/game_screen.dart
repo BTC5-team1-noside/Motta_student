@@ -6,7 +6,6 @@ import "dart:convert";
 
 import 'package:student/screens/ready_screen.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
-import "package:student/widgets/voiceBoxApi.dart";
 
 class GameScreen extends StatelessWidget {
   GameScreen({super.key});
@@ -18,6 +17,7 @@ class GameScreen extends StatelessWidget {
 
   void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
     await bgm.setVolume(0.1);
+    await characterVoice.setReleaseMode(ReleaseMode.stop);
     await characterVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
@@ -39,7 +39,6 @@ class GameScreen extends StatelessWidget {
               MaterialPageRoute(
                   builder: (ctx) => ReadyScreen(
                         belongings: dataFromJson,
-                        characterVoice: characterVoice,
                       )),
             );
           });

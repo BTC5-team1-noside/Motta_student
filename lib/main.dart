@@ -6,9 +6,9 @@ import 'package:student/screens/student_login.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
-  initializeDateFormatting().then((_) {
-    runApp(const MyApp());
-  });
+  // initializeDateFormatting().then((_) {
+  //   runApp(const MyApp());
+  // });
 
   const app = MyApp();
   //device_preview用
