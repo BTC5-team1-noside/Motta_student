@@ -50,11 +50,13 @@ class _PlayScreenState extends State<PlayScreen> {
   bool isListening = false;
   bool isOnce = false;
   final int _id = 1;
+  bool isVoiceFinished = false;
 
   // instance
   SpeechToText speechToText = SpeechToText();
   Timer? _listeningTimer; //timerで一定時間過ぎて回答がないならもう一度読み上げるのを実装するかもしれないため、残しておく。
   final AudioPlayer characterVoice = AudioPlayer();
+  final AudioPlayer soundEffect = AudioPlayer();
 
   @override
   void initState() {
@@ -114,6 +116,8 @@ class _PlayScreenState extends State<PlayScreen> {
     characterVoice.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         isOnce = true;
+        isVoiceFinished = true;
+        setState(() {});
         _voiceData = _downloadVoiceData;
         _startListening();
       }
@@ -127,16 +131,23 @@ class _PlayScreenState extends State<PlayScreen> {
     Widget mainContent;
     List<Widget> bodyMain;
 
-    if (!isListening) {
-      if (!answered) {
-        speak();
+    if (!isVoiceFinished) {
+      if (!isListening) {
+        if (!answered) {
+          speak();
+        }
       }
     }
 
     if (index < _subjects.length) {
       mainContent = Container(
         padding: const EdgeInsets.symmetric(horizontal: 200),
-        child: SizedBox(
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(150, 244, 248, 250),
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
           height: 250,
           child: ListView(
             children: [
@@ -158,7 +169,12 @@ class _PlayScreenState extends State<PlayScreen> {
     } else {
       mainContent = Container(
         padding: const EdgeInsets.symmetric(horizontal: 200),
-        child: SizedBox(
+        child: Container(
+          padding: const EdgeInsets.all(15),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(150, 244, 248, 250),
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
           height: 250,
           child: ListView(
             children: [
@@ -184,38 +200,50 @@ class _PlayScreenState extends State<PlayScreen> {
     if (!answered) {
       backgroundPicture =
           AssetImage('assets/images/char$_id/normal_background.PNG');
-      bodyMain = [
-        mainContent,
-        const BodyText(text: "もった？"),
-        const SizedBox(
-          height: 50,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButtonWithStyle("もった", () {
-              setState(() {
-                answered = true;
-                isOnce = false;
-                isListening = false;
-              });
-            }),
-            ElevatedButtonWithStyle("もういちど", () {
-              setState(() {});
-            }),
-            ElevatedButtonWithStyle("やめる", () {
-              // Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (ctx) => const LoginScreen()));
-            })
-          ],
-        )
-      ];
+      if (isVoiceFinished) {
+        bodyMain = [
+          mainContent,
+          const BodyText(text: "もった？"),
+          const SizedBox(
+            height: 50,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButtonWithStyle("もった", () {
+                setState(() {
+                  answered = true;
+                  isOnce = false;
+                  isListening = false;
+                });
+              }),
+              ElevatedButtonWithStyle("もういちど", () {
+                setState(() {});
+              }),
+              ElevatedButtonWithStyle("やめる", () {
+                // Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => const LoginScreen()));
+              })
+            ],
+          )
+        ];
+        isVoiceFinished = false;
+      } else {
+        bodyMain = [
+          mainContent,
+          const BodyText(text: "もった？"),
+          const SizedBox(
+            height: 50,
+          ),
+        ];
+      }
     } else {
       backgroundPicture =
           AssetImage('assets/images/char$_id/good_background.PNG');
       bodyMain = [const BodyText(text: "グッド！")];
       isOnce = false;
+
       Future.delayed(const Duration(seconds: 1), () {
         if (index == _subjects.length) {
           if (!context.mounted) return;
