@@ -17,8 +17,6 @@ class GameScreen extends StatelessWidget {
   final AudioPlayer characterVoice = AudioPlayer();
   final AudioPlayer bgm = AudioPlayer();
 
-  final String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
-
   void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
     await bgm.setVolume(0.1);
     await characterVoice.setReleaseMode(ReleaseMode.stop);

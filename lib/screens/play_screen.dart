@@ -120,7 +120,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _id = _studentId % 5 == 0 ? 5 : _studentId % 5;
+    _id = _studentId % 5 == 0 ? 5 : (_studentId + 5) % 5;
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;

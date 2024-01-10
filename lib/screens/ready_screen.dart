@@ -23,7 +23,7 @@ class ReadyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AudioPlayer characterVoice = AudioPlayer();
-    final int id = studentId % 5 == 0 ? 5 : studentId % 5;
+    final int id = studentId % 5 == 0 ? 5 : (studentId + 5) % 5;
     late List textList;
     late List voiceData;
     const String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
