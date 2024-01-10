@@ -46,7 +46,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool answered = false;
   bool isListening = false;
   bool isOnce = false;
-  final int _id = 1;
+  int _id = 1;
   bool isVoiceFinished = false;
 
   SpeechToText speechToText = SpeechToText();
@@ -120,7 +120,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("indexは、$index");
+    _id = _studentId % 5 == 0 ? 5 : _studentId % 5;
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
