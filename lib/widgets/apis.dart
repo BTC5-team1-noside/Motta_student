@@ -21,17 +21,14 @@ Future synthesizeVoice(String text) async {
     }),
   );
   if (response.statusCode == 200) {
-    debugPrint("レスポンス帰ってきてる？");
     var body = json.decode(response.body);
     var audioQuery = body;
-
-    debugPrint("ここまでおっけー？");
     var synthesisResponse = await http.post(
       Uri.https(
         "d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app",
         "/synthesis",
         {
-          "speaker": "32", //speakerのvalueを変更することで話者を変更
+          "speaker": "42", //speakerのvalueを変更することで話者を変更
         },
       ),
       headers: {
@@ -39,21 +36,14 @@ Future synthesizeVoice(String text) async {
       },
       body: json.encode(audioQuery),
     );
-
-    debugPrint("if文おわり");
-    debugPrint("ステータスコードは：${synthesisResponse.statusCode}");
-
     if (synthesisResponse.statusCode == 200) {
-      debugPrint("200きてる？");
       final data = synthesisResponse.bodyBytes;
-      // debugPrint("$data");
-      debugPrint('音声生成成功!');
       return data;
     } else {
-      debugPrint('音声生成失敗: ${synthesisResponse.reasonPhrase}');
+      debugPrint('apis line43: 音声生成失敗: ${synthesisResponse.reasonPhrase}');
     }
   } else {
-    debugPrint('クエリ生成失敗: ${response.reasonPhrase}');
+    debugPrint('apis line46: クエリ生成失敗: ${response.reasonPhrase}');
   }
 }
 

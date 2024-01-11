@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -33,7 +32,6 @@ class PlayScreen extends StatefulWidget {
 }
 
 class _PlayScreenState extends State<PlayScreen> {
-  // Data
   late DayBelongings _belongings;
   late List _subjects;
   late List _items;
@@ -44,17 +42,15 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _voiceText;
   late String _date;
 
-  //control flag
   int index = 0;
   bool answered = false;
   bool isListening = false;
   bool isOnce = false;
-  final int _id = 1;
+  int _id = 1;
   bool isVoiceFinished = false;
 
-  // instance
   SpeechToText speechToText = SpeechToText();
-  Timer? _listeningTimer; //timerで一定時間過ぎて回答がないならもう一度読み上げるのを実装するかもしれないため、残しておく。
+  Timer? _listeningTimer;
   final AudioPlayer characterVoice = AudioPlayer();
   final AudioPlayer soundEffect = AudioPlayer();
 
@@ -77,8 +73,6 @@ class _PlayScreenState extends State<PlayScreen> {
     super.dispose();
   }
 
-  //////////////////////////////////
-  ////音声認識
   void _startListening() async {
     var available = await speechToText.initialize();
     if (available) {
@@ -89,13 +83,15 @@ class _PlayScreenState extends State<PlayScreen> {
             debugPrint("$result");
             _stopListening();
             if (isOnce == true) {
+              soundEffect.setAsset("sounds/good.mp3");
+              soundEffect.play();
               setState(() {
                 answered = true;
               });
             }
           }
         },
-        localeId: 'ja_JP', // 日本語の設定
+        localeId: 'ja_JP',
       );
     }
   }
@@ -126,7 +122,8 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("indexは、$index");
+    _id = _studentId % 5 == 0 ? 5 : (_studentId + 5) % 5;
+    debugPrint("play_screen line:126: $_id");
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
@@ -211,6 +208,8 @@ class _PlayScreenState extends State<PlayScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButtonWithStyle("もった", () {
+                soundEffect.setAsset("sounds/good.mp3");
+                soundEffect.play();
                 setState(() {
                   answered = true;
                   isOnce = false;
@@ -247,6 +246,8 @@ class _PlayScreenState extends State<PlayScreen> {
       Future.delayed(const Duration(seconds: 1), () {
         if (index == _subjects.length) {
           if (!context.mounted) return;
+          soundEffect.setAsset("sounds/complete.mp3");
+          soundEffect.play();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => EndScreen(
@@ -270,7 +271,7 @@ class _PlayScreenState extends State<PlayScreen> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: backgroundPicture, // 배경으로 사용할 이미지 경로
+            image: backgroundPicture,
             fit: BoxFit.cover,
           ),
         ),

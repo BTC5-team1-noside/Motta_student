@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import "package:flutter_tts/flutter_tts.dart";
 import 'package:student/models/belongings.dart';
 
@@ -42,55 +41,3 @@ class _SubjectSpeakState extends State<SubjectSpeak> {
     );
   }
 }
-
-// class FruitListScreen extends StatefulWidget {
-//   const FruitListScreen({super.key});
-
-//   @override
-//   _FruitListScreenState createState() => _FruitListScreenState();
-// }
-
-// class _FruitListScreenState extends State<FruitListScreen> {
-//   late FlutterTts flutterTts;
-//   final List<String> fruits = [
-//     "りんご",
-//     "ばーなーなー",
-//     "チェリーーーーーっしゅ&#xff01;",
-//     "もった&#xff1f;"
-//   ];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     flutterTts = FlutterTts();
-//     flutterTts.setLanguage("ja-JP");
-//     flutterTts.setPitch(1);
-//   }
-
-//   @override
-//   void dispose() {
-//     flutterTts.stop();
-//     super.dispose();
-//   }
-
-//   Future<void> speak(String text) async {
-//     await flutterTts.speak(
-//       text,
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//       itemCount: fruits.length,
-//       itemBuilder: (context, index) {
-//         return ListTile(
-//           title: Text(fruits[index]),
-//           onTap: () => speak(
-//             fruits[index],
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
