@@ -6,10 +6,14 @@ import "package:http/http.dart" as http;
 import "package:just_audio/just_audio.dart";
 import "package:student/widgets/my_stream_audio_source.dart";
 
-Future synthesizeVoice(String text) async {
+List<int> speakerArr = [32, 70, 54, 51, 42];
+
+Future synthesizeVoice({required String text, required int studentId}) async {
+  int speakerIndex = (studentId % 5 == 0 ? 5 : studentId % 5) - 1;
   String dynamicUrl =
       "https://d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app"; //ここのアドレスがエンジンを立ち上げ直す毎に変わるよ！！
-  String url = '$dynamicUrl/audio_query?text=$text&speaker=32';
+  String url =
+      '$dynamicUrl/audio_query?text=$text&speaker=${speakerArr[speakerIndex]}';
 
   final response = await http.post(
     Uri.parse(url),
@@ -28,7 +32,7 @@ Future synthesizeVoice(String text) async {
         "d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app",
         "/synthesis",
         {
-          "speaker": "42", //speakerのvalueを変更することで話者を変更
+          "speaker": "${speakerArr[speakerIndex]}", //speakerのvalueを変更することで話者を変更
         },
       ),
       headers: {

@@ -46,7 +46,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool answered = false;
   bool isListening = false;
   bool isOnce = false;
-  int _id = 1;
+  late int _id;
   bool isVoiceFinished = false;
 
   SpeechToText speechToText = SpeechToText();
@@ -106,7 +106,10 @@ class _PlayScreenState extends State<PlayScreen> {
   Future<void> speak() async {
     playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
     if (index < _subjects.length) {
-      _downloadVoiceData = await synthesizeVoice(_voiceText[index + 1]);
+      _downloadVoiceData = await synthesizeVoice(
+        text: _voiceText[index + 1],
+        studentId: _studentId,
+      );
     }
 
     characterVoice.playerStateStream.listen((state) {
@@ -122,7 +125,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _id = _studentId % 5 == 0 ? 5 : (_studentId + 5) % 5;
+    _id = _studentId % 5 == 0 ? 5 : _studentId % 5;
     debugPrint("play_screen line:126: $_id");
     AssetImage backgroundPicture;
     Widget mainContent;
@@ -207,7 +210,7 @@ class _PlayScreenState extends State<PlayScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButtonWithStyle("もった", () {
+              ElevatedButtonWithStyle("もった", studentId: _studentId, () {
                 soundEffect.setAsset("sounds/good.mp3");
                 soundEffect.play();
                 setState(() {
@@ -216,10 +219,10 @@ class _PlayScreenState extends State<PlayScreen> {
                   isListening = false;
                 });
               }),
-              ElevatedButtonWithStyle("もういちど", () {
+              ElevatedButtonWithStyle("もういちど", studentId: _studentId, () {
                 setState(() {});
               }),
-              ElevatedButtonWithStyle("やめる", () {
+              ElevatedButtonWithStyle("やめる", studentId: _studentId, () {
                 // Navigator.of(context).popUntil((route) => route.isFirst);
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) => const LoginScreen()));
@@ -267,7 +270,7 @@ class _PlayScreenState extends State<PlayScreen> {
     }
 
     return Scaffold(
-      appBar: const AppBarMotta(),
+      appBar: AppBarMotta(studentId: _studentId),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(

@@ -25,7 +25,7 @@ class EndScreen extends StatelessWidget {
       postConfirmDate(date: date, studentId: studentId);
 
       await characterVoice.play(AssetSource('sounds/complete_char$id.wav'),
-          volume: 0.3);
+          volume: 1.0);
 
       final data = await getCalendarData(
         date: date,
@@ -52,7 +52,7 @@ class EndScreen extends StatelessWidget {
     speak();
 
     return Scaffold(
-      appBar: const AppBarMotta(),
+      appBar: AppBarMotta(studentId: studentId),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(

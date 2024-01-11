@@ -63,7 +63,7 @@ class GameScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      appBar: const AppBarMotta(),
+      appBar: AppBarMotta(studentId: studentId),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -80,7 +80,8 @@ class GameScreen extends StatelessWidget {
               ),
               SizedBox(
                 height: 100,
-                child: ElevatedButtonWithStyle("もちものかくにん　はじめ", () {
+                child: ElevatedButtonWithStyle("もちものかくにん　はじめ",
+                    studentId: studentId, () {
                   final formatDate = DateFormat("yyyy-MM-dd");
                   DateTime currentDate = DateTime.now();
                   final formattedDate = formatDate.format(currentDate);
@@ -90,7 +91,8 @@ class GameScreen extends StatelessWidget {
               ),
               SizedBox(
                 height: 50,
-                child: ElevatedButtonWithStyle("かれんだーかくにん", () async {
+                child: ElevatedButtonWithStyle("かれんだーかくにん",
+                    studentId: studentId, () async {
                   final formatDate = DateFormat("yyyy-MM-dd");
                   DateTime currentDate = DateTime.now();
                   final formattedDate = formatDate.format(currentDate);

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:student/models/calendar_model.dart';
 import 'package:student/screens/student_login.dart';
+import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -18,7 +19,7 @@ class CalendarPage extends StatelessWidget {
       create: (_) => CalendarModel()..init(),
       child: Consumer<CalendarModel>(builder: (context, model, snapshot) {
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBarMotta(studentId: studentId),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -117,8 +118,10 @@ class CalendarPage extends StatelessWidget {
                   height: 70,
                 ),
                 SizedBox(
+                  height: 100,
                   child: ElevatedButtonWithStyle(
                     "さいしょにもどる",
+                    studentId: studentId,
                     () {
                       if (!context.mounted) return;
                       Navigator.of(context).push(

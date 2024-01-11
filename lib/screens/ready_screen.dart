@@ -64,13 +64,14 @@ class ReadyScreen extends StatelessWidget {
     }
 
     void splitVoiceData() async {
-      voiceData = await synthesizeVoice(textList[0]);
+      voiceData =
+          await synthesizeVoice(text: textList[0], studentId: studentId);
       print(voiceData);
     }
 
     Future<void> speak() async {
       await characterVoice.play(AssetSource('sounds/ready_char$id.wav'),
-          volume: 0.3);
+          volume: 1.0);
 
       characterVoice.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
@@ -99,7 +100,7 @@ class ReadyScreen extends StatelessWidget {
     speak();
 
     return Scaffold(
-      appBar: const AppBarMotta(),
+      appBar: AppBarMotta(studentId: studentId),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -115,7 +116,14 @@ class ReadyScreen extends StatelessWidget {
               const SizedBox(
                 height: 100,
               ),
-              const BodyText(text: text),
+              Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(150, 244, 248, 250),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  height: 250,
+                  child: const BodyText(text: text)),
             ],
           ),
         ),
