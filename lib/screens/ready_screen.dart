@@ -21,7 +21,7 @@ class ReadyScreen extends StatelessWidget {
   late dynamic voiceData;
   final String date;
   final AudioPlayer bgmController;
-
+  late String voiceUrl;
   @override
   Widget build(BuildContext context) {
     final AudioPlayer characterVoice = AudioPlayer();
@@ -61,17 +61,18 @@ class ReadyScreen extends StatelessWidget {
           arrText.add(txt);
         }
       }
-      debugPrint("ready_screen line 68:$arrText");
+      // debugPrint("ready_screen line 68:$arrText");
       return arrText;
     }
 
     void splitVoiceData() async {
       voiceData =
           await synthesizeVoice(text: textList[0], studentId: studentId);
-      print(voiceData);
     }
 
     Future<void> speak() async {
+      voiceUrl =
+          await synthesizeVoiceUrl(text: textList[0], studentId: studentId);
       await characterVoice.play(AssetSource('sounds/ready_char$id.wav'),
           volume: 1.0);
 
@@ -90,6 +91,7 @@ class ReadyScreen extends StatelessWidget {
                   voiceText: textList,
                   date: date,
                   bgmController: bgmController,
+                  voiceUrl: voiceUrl,
                 ),
               ),
             );

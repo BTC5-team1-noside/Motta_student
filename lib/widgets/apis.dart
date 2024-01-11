@@ -116,3 +116,35 @@ Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
     throw Future.error("エラーが発生しました: $error");
   }
 }
+
+Future synthesizeVoiceUrl(
+    {required String text, required int studentId}) async {
+  String url = "api.tts.quest";
+  try {
+    final response = await http.get(
+      Uri.https(
+        url,
+        "v3/voicevox/synthesis",
+        {
+          "text": text,
+          "speaker": "32", //speakerのvalueを変更することで話者を変更
+        },
+      ),
+    );
+    final res = json.decode(response.body);
+    return res["mp3DownloadUrl"];
+  } catch (error) {
+    debugPrint(error.toString());
+  }
+}
+
+
+// void playVoiceFromData(text) async {
+    
+    // final source = MyStreamAudioSource(data);
+    // await audioPlayer.setAudioSource(source);
+
+    // await audioPlayer.setUrl(
+    //     "https://audio2.tts.quest/v1/data/1cc28da6e759b0f6dc4bb78329b5d6de6cd31993fa37ae03a7dcba25170a14ef/audio.wav");
+    // audioPlayer.play();
+  // }
