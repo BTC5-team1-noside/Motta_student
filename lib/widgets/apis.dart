@@ -119,25 +119,59 @@ Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
 
 Future synthesizeVoiceUrl(
     {required String text, required int studentId}) async {
+  int speakerIndex = (studentId % 5 == 0 ? 5 : studentId % 5) - 1;
   String url = "api.tts.quest";
   try {
-    final response = await http.get(
-      Uri.https(
-        url,
-        "v3/voicevox/synthesis",
-        {
-          "text": text,
-          "speaker": "32", //speakerのvalueを変更することで話者を変更
-        },
-      ),
-    );
-    final res = json.decode(response.body);
-    return res["mp3DownloadUrl"];
+    while (true) {
+      final response = await http.get(
+        Uri.https(
+          url,
+          "v3/voicevox/synthesis",
+          {
+            "text": text,
+            "speaker":
+                "${speakerArr[speakerIndex]}", //speakerのvalueを変更することで話者を変更
+          },
+        ),
+      );
+      final res = json.decode(response.body);
+
+      if (res["success"] == true) {
+        return res["mp3DownloadUrl"];
+      } else {
+        Future.delayed(const Duration(milliseconds: 250));
+        continue;
+      }
+    }
   } catch (error) {
     debugPrint(error.toString());
   }
 }
 
+Future<bool> isMp3Available({required String incomingUrl}) async {
+  String url = "audio2.tts.quest";
+  final remainUrl = incomingUrl.substring(25);
+  try {
+    while (true) {
+      final response = await http.get(
+        Uri.https(
+          url,
+          remainUrl,
+        ),
+      );
+      final res = json.decode(response.body);
+      print(res);
+      if (res["isAudioReady"]) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  } catch (error) {
+    debugPrint(error.toString());
+    return false;
+  }
+}
 
 // void playVoiceFromData(text) async {
     
@@ -147,4 +181,4 @@ Future synthesizeVoiceUrl(
     // await audioPlayer.setUrl(
     //     "https://audio2.tts.quest/v1/data/1cc28da6e759b0f6dc4bb78329b5d6de6cd31993fa37ae03a7dcba25170a14ef/audio.wav");
     // audioPlayer.play();
-  // }
+  // @ p;}
