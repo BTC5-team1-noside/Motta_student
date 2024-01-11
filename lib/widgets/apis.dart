@@ -28,7 +28,7 @@ Future synthesizeVoice(String text) async {
         "d0a5-240b-c020-401-d255-d446-849e-d77e-7c9c.ngrok-free.app",
         "/synthesis",
         {
-          "speaker": "32", //speakerのvalueを変更することで話者を変更
+          "speaker": "42", //speakerのvalueを変更することで話者を変更
         },
       ),
       headers: {

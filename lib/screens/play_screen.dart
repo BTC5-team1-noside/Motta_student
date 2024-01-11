@@ -81,10 +81,10 @@ class _PlayScreenState extends State<PlayScreen> {
         onResult: (result) {
           if (result.recognizedWords.contains("持った")) {
             debugPrint("$result");
-            soundEffect.setAsset("sounds/good.mp3");
-            soundEffect.play();
             _stopListening();
             if (isOnce == true) {
+              soundEffect.setAsset("sounds/good.mp3");
+              soundEffect.play();
               setState(() {
                 answered = true;
               });
@@ -123,6 +123,7 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     _id = _studentId % 5 == 0 ? 5 : (_studentId + 5) % 5;
+    debugPrint("play_screen line:126: $_id");
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
