@@ -21,6 +21,7 @@ class PlayScreen extends StatefulWidget {
     required this.voiceText,
     required this.date,
     required this.bgmController,
+    required this.voiceUrl,
   });
 
   final DayBelongings belongings;
@@ -29,6 +30,7 @@ class PlayScreen extends StatefulWidget {
   final List voiceText;
   final String date;
   final audio_player.AudioPlayer bgmController;
+  final String voiceUrl;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -45,6 +47,8 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _voiceText;
   late String _date;
   late dynamic _bgmController;
+  late String _voiceUrl;
+  late String _nextVoiceUrl;
 
   int index = 0;
   bool answered = false;
@@ -70,6 +74,7 @@ class _PlayScreenState extends State<PlayScreen> {
     _voiceText = widget.voiceText;
     _date = widget.date;
     _bgmController = widget.bgmController;
+    _voiceUrl = widget.voiceUrl;
   }
 
   @override
@@ -110,6 +115,10 @@ class _PlayScreenState extends State<PlayScreen> {
 
   Future<void> speak() async {
     playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
+    // print(_voiceUrl);
+    // characterVoice.setUrl(_voiceUrl);
+    // characterVoice.play();
+
     if (index < _subjects.length) {
       _downloadVoiceData = await synthesizeVoice(
         text: _voiceText[index + 1],

@@ -7,20 +7,16 @@ import 'package:just_audio/just_audio.dart';
 final AudioPlayer bgmPlayer = AudioPlayer();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // bgmPlayer.setAsset('sounds/enchanted-chimes.mp3');
-  // bgmPlayer.setLoopMode(LoopMode.one); // BGMをループ再生する
-  // bgmPlayer.setVolume(0.1);
-  // bgmPlayer.play();
   const app = MyApp();
-  // final devicePreview = DevicePreview(
-  //   builder: (_) => app,
-  // );
-  // initializeDateFormatting().then((_) {
-  //   runApp(devicePreview);
-  // });
+  final devicePreview = DevicePreview(
+    builder: (_) => app,
+  );
   initializeDateFormatting().then((_) {
-    runApp(app);
+    runApp(devicePreview);
   });
+  // initializeDateFormatting().then((_) {
+  //   runApp(app);
+  // });
 }
 
 @override

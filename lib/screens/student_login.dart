@@ -40,7 +40,7 @@ class LoginScreen extends StatelessWidget {
                     final el = data[index];
                     return GestureDetector(
                       onTap: () {
-                        debugPrint("student_idは？${el["student_id"]}");
+                        // debugPrint("student_idは？${el["student_id"]}");
                         Navigator.push(
                           context,
                           MaterialPageRoute(

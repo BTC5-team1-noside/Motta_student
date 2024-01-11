@@ -28,7 +28,7 @@ class GameScreen extends StatelessWidget {
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
       final data = json.decode(response.body);
-      debugPrint("${data["selectedDate"]}");
+      // debugPrint("${data["selectedDate"]}");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
       characterVoice.onPlayerStateChanged.listen((event) {
@@ -56,7 +56,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // bgm.stop();
-    bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
+    // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
     bgm.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
         bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
