@@ -20,7 +20,7 @@ class GameScreen extends StatelessWidget {
   void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
     await bgm.setVolume(0.1);
     await characterVoice.setReleaseMode(ReleaseMode.stop);
-    await characterVoice.play(AssetSource('sounds/start.mp3'), volume: 0.3);
+    await characterVoice.play(AssetSource('sounds/start.mp3'), volume: 1.0);
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/timetables-history/$date");
@@ -41,6 +41,7 @@ class GameScreen extends StatelessWidget {
                   belongings: dataFromJson,
                   studentId: studentId,
                   date: date,
+                  bgmController: bgm,
                 ),
               ),
             );
@@ -55,7 +56,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // bgm.stop();
-    // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.2);
+    bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
     bgm.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
         bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
@@ -64,55 +65,62 @@ class GameScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBarMotta(studentId: studentId),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/start_page.png"),
-            fit: BoxFit.cover,
+      body: PopScope(
+        onPopInvoked: (didPop) {
+          bgm.stop();
+          characterVoice.stop();
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/start_page.png"),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const SizedBox(
-                height: 900,
-              ),
-              SizedBox(
-                height: 100,
-                child: ElevatedButtonWithStyle("もちものかくにん　はじめ",
-                    studentId: studentId, () {
-                  final formatDate = DateFormat("yyyy-MM-dd");
-                  DateTime currentDate = DateTime.now();
-                  final formattedDate = formatDate.format(currentDate);
-                  // _startButton(context, date: formattedDate);
-                  _startButton(context, date: "2024-01-22");
-                }),
-              ),
-              SizedBox(
-                height: 50,
-                child: ElevatedButtonWithStyle("かれんだーかくにん",
-                    studentId: studentId, () async {
-                  final formatDate = DateFormat("yyyy-MM-dd");
-                  DateTime currentDate = DateTime.now();
-                  final formattedDate = formatDate.format(currentDate);
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const SizedBox(
+                  height: 900,
+                ),
+                SizedBox(
+                  height: 100,
+                  child: ElevatedButtonWithStyle("もちものかくにん　はじめ",
+                      studentId: studentId, () {
+                    final formatDate = DateFormat("yyyy-MM-dd");
+                    DateTime currentDate = DateTime.now();
+                    final formattedDate = formatDate.format(currentDate);
+                    // _startButton(context, date: formattedDate);
+                    _startButton(context, date: "2024-01-22");
+                  }),
+                ),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButtonWithStyle("かれんだーかくにん",
+                      studentId: studentId, () async {
+                    final formatDate = DateFormat("yyyy-MM-dd");
+                    DateTime currentDate = DateTime.now();
+                    final formattedDate = formatDate.format(currentDate);
 
-                  final data = await getCalendarData(
-                    date: formattedDate,
-                    studentId: studentId,
-                  );
-                  if (!context.mounted) return;
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) => CalendarPage(
-                        data: data,
-                        studentId: studentId,
+                    final data = await getCalendarData(
+                      date: formattedDate,
+                      studentId: studentId,
+                    );
+                    if (!context.mounted) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => CalendarPage(
+                          data: data,
+                          studentId: studentId,
+                          bgmController: bgm,
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              ),
-            ],
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

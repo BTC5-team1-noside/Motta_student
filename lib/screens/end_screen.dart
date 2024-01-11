@@ -10,12 +10,14 @@ class EndScreen extends StatelessWidget {
     super.key,
     required this.studentId,
     required this.date,
+    required this.bgmController,
   });
 
   final int studentId;
   final String date;
   final String text = "ぜんぶかくにんできたね\nすごいぞ!\nキャッホー";
   final AudioPlayer characterVoice = AudioPlayer();
+  final AudioPlayer bgmController;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,7 @@ class EndScreen extends StatelessWidget {
                 builder: (ctx) => CalendarPage(
                   data: data,
                   studentId: studentId,
+                  bgmController: bgmController,
                 ),
               ),
             );
@@ -53,21 +56,27 @@ class EndScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBarMotta(studentId: studentId),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-                'assets/images/char$id/end_background.PNG'), // 배경으로 사용할 이미지 경로
-            fit: BoxFit.cover,
+      body: PopScope(
+        onPopInvoked: (didPop) {
+          bgmController.stop();
+          characterVoice.stop();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                  'assets/images/char$id/end_background.PNG'), // 배경으로 사용할 이미지 경로
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset("assets/images/char$id/character_end.jpg"),
-              BodyText(text: text),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset("assets/images/char$id/character_end.jpg"),
+                BodyText(text: text),
+              ],
+            ),
           ),
         ),
       ),

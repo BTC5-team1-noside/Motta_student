@@ -93,3 +93,26 @@ Future<List<dynamic>> getCalendarData(
     return [];
   }
 }
+
+Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
+  final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
+      "/api/v1/teacher/home/history", {"date": "2024-01-22"});
+
+  // final formatDate = DateFormat("yyyy-MM-dd");
+  // DateTime currentDate = selectedDate ?? DateTime.now();
+  // final formattedDate = formatDate.format(currentDate);
+  // final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
+  //     "/api/v1/teacher/home/history", {"date": formattedDate});
+
+  try {
+    final res = await http.get(url);
+    final data = await json.decode(res.body);
+    final List<Map<String, dynamic>> studentNames =
+        List<Map<String, dynamic>>.from(
+            data["studentsHistory"].map((student) => student));
+    return studentNames;
+  } catch (error) {
+    debugPrint("student_login line28:エラーです！");
+    throw Future.error("エラーが発生しました: $error");
+  }
+}

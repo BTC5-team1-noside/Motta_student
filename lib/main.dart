@@ -12,11 +12,14 @@ void main() {
   // bgmPlayer.setVolume(0.1);
   // bgmPlayer.play();
   const app = MyApp();
-  final devicePreview = DevicePreview(
-    builder: (_) => app,
-  );
+  // final devicePreview = DevicePreview(
+  //   builder: (_) => app,
+  // );
+  // initializeDateFormatting().then((_) {
+  //   runApp(devicePreview);
+  // });
   initializeDateFormatting().then((_) {
-    runApp(devicePreview);
+    runApp(app);
   });
 }
 

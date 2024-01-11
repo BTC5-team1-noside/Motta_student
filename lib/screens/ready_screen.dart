@@ -13,12 +13,14 @@ class ReadyScreen extends StatelessWidget {
     required this.belongings,
     required this.studentId,
     required this.date,
+    required this.bgmController,
   });
 
   final DayBelongings belongings;
   final int studentId;
   late dynamic voiceData;
   final String date;
+  final AudioPlayer bgmController;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +89,7 @@ class ReadyScreen extends StatelessWidget {
                   voiceData: voiceData,
                   voiceText: textList,
                   date: date,
+                  bgmController: bgmController,
                 ),
               ),
             );
@@ -101,30 +104,36 @@ class ReadyScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBarMotta(studentId: studentId),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/char$id/normal_background.PNG'),
-            fit: BoxFit.cover,
+      body: PopScope(
+        onPopInvoked: (didPop) {
+          bgmController.stop();
+          characterVoice.stop();
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/char$id/normal_background.PNG'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Image.asset("assets/images/char$id/character.jpg"),
-              const SizedBox(
-                height: 100,
-              ),
-              Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(150, 244, 248, 250),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                  height: 250,
-                  child: const BodyText(text: text)),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset("assets/images/char$id/character.jpg"),
+                const SizedBox(
+                  height: 100,
+                ),
+                Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(150, 244, 248, 250),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    height: 250,
+                    child: const BodyText(text: text)),
+              ],
+            ),
           ),
         ),
       ),
