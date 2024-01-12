@@ -164,7 +164,9 @@ Future<bool> isMp3Available({required String incomingUrl}) async {
       if (res["isAudioReady"]) {
         return true;
       } else {
-        return false;
+        Future.delayed(const Duration(milliseconds: 250));
+        continue;
+        // return false;
       }
     }
   } catch (error) {
