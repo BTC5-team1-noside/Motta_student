@@ -29,6 +29,7 @@ class _CalendarPageState extends State<CalendarPage> {
   late List _data;
   late int _studentId;
   late AudioPlayer _bgmController;
+  late final DateTime _selected = DateTime(2024, 1, 22);
   late Widget mainContents;
   late bool isGifFinished;
   late bool _isFromEndScreen;
@@ -116,7 +117,8 @@ class _CalendarPageState extends State<CalendarPage> {
                           },
                         ),
                         focusedDay: DateTime.now(),
-                        // focusedDay: DateTime(2024, 1, 10),
+
+                        // focusedDay: DateTime(2024, 1, 22),
                         firstDay: DateTime.utc(2022, 4, 1),
                         lastDay: DateTime.utc(2025, 12, 31),
                         locale: Localizations.localeOf(context).languageCode,
@@ -140,7 +142,32 @@ class _CalendarPageState extends State<CalendarPage> {
                           defaultTextStyle: TextStyle(fontSize: 21),
                           isTodayHighlighted: true,
                         ),
+                        selectedDayPredicate: (DateTime date) {
+                          // 選択中の日付を判定し、その日付の場合にtrueを返します
+                          return isSameDay(_selected, date);
+                        },
+
                         calendarBuilders: CalendarBuilders(
+                          selectedBuilder: (context, date, events) {
+                            return Container(
+                              margin: const EdgeInsets.all(2.0),
+                              alignment: Alignment.topLeft,
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 243, 128, 21),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 5, top: 5),
+                                child: Text(
+                                  '${date.day}',
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                           defaultBuilder: (context, date, events) {
                             return Container(
                               margin: const EdgeInsets.all(2.0),
@@ -185,25 +212,49 @@ class _CalendarPageState extends State<CalendarPage> {
                               ),
                             );
                           },
-                          todayBuilder: (context, day, focusedDay) {
+                          todayBuilder: (context, date, _) {
                             return Container(
                               margin: const EdgeInsets.all(2.0),
                               alignment: Alignment.topLeft,
                               decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 243, 128, 21),
+                                color: Colors.white,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 5, top: 5),
                                 child: Text(
-                                  '${day.day}',
-                                  style: const TextStyle(
+                                  '${date.day}',
+                                  style: TextStyle(
                                     fontSize: 26,
                                     fontWeight: FontWeight.w600,
-                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    color:
+                                        date.weekday == 6 || date.weekday == 7
+                                            ? Colors.red
+                                            : const Color.fromARGB(
+                                                255, 116, 116, 116),
                                   ),
                                 ),
                               ),
                             );
+
+                            // この下はデモ以外の時に使う
+                            // return Container(
+                            //   margin: const EdgeInsets.all(2.0),
+                            //   alignment: Alignment.topLeft,
+                            //   decoration: const BoxDecoration(
+                            //     color: Color.fromARGB(255, 243, 128, 21),
+                            //   ),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.only(left: 5, top: 5),
+                            //     child: Text(
+                            //       '${day.day}',
+                            //       style: const TextStyle(
+                            //         fontSize: 26,
+                            //         fontWeight: FontWeight.w600,
+                            //         color: Color.fromARGB(255, 255, 255, 255),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // );
                           },
                           markerBuilder: (context, date, events) {
                             String dateOnly =
