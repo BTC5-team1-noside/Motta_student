@@ -110,6 +110,7 @@ Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
     final List<Map<String, dynamic>> studentNames =
         List<Map<String, dynamic>>.from(
             data["studentsHistory"].map((student) => student));
+    debugPrint("$studentNames");
     return studentNames;
   } catch (error) {
     debugPrint("student_login line28:エラーです！");
