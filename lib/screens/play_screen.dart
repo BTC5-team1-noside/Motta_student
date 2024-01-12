@@ -114,16 +114,25 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   Future<void> speak() async {
-    playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
+    // playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
     // print(_voiceUrl);
-    // characterVoice.setUrl(_voiceUrl);
-    // characterVoice.play();
-
+    characterVoice.setUrl(_voiceUrl);
+    while (true) {
+      if (await isMp3Available(incomingUrl: _voiceUrl)) {
+        Future.delayed(const Duration(milliseconds: 250));
+      } else {
+        break;
+      }
+    }
+    characterVoice.play();
     if (index < _subjects.length) {
-      _downloadVoiceData = await synthesizeVoice(
-        text: _voiceText[index + 1],
-        studentId: _studentId,
-      );
+      // _downloadVoiceData = await synthesizeVoice(
+      //   text: _voiceText[index + 1],
+      //   studentId: _studentId,
+      // );
+      _nextVoiceUrl = await synthesizeVoiceUrl(
+          text: _voiceText[index + 1], studentId: _studentId);
+      print("nextUrl:$_nextVoiceUrl");
     }
 
     characterVoice.playerStateStream.listen((state) {
@@ -131,7 +140,8 @@ class _PlayScreenState extends State<PlayScreen> {
         isOnce = true;
         isVoiceFinished = true;
         setState(() {});
-        _voiceData = _downloadVoiceData;
+        // _voiceData = _downloadVoiceData;
+        _voiceUrl = _nextVoiceUrl;
         _startListening();
       }
     });
