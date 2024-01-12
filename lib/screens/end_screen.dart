@@ -26,8 +26,10 @@ class EndScreen extends StatelessWidget {
     Future<void> speak() async {
       postConfirmDate(date: date, studentId: studentId);
 
-      await characterVoice.play(AssetSource('sounds/complete_char$id.wav'),
-          volume: 1.0);
+      Future.delayed(const Duration(seconds: 1), () async {
+        await characterVoice.play(AssetSource('sounds/complete_char$id.wav'),
+            volume: 1.0);
+      });
 
       final data = await getCalendarData(
         date: date,
@@ -44,6 +46,7 @@ class EndScreen extends StatelessWidget {
                   data: data,
                   studentId: studentId,
                   bgmController: bgmController,
+                  isFromEndScreen: true,
                 ),
               ),
             );

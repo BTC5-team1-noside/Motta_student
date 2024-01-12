@@ -56,6 +56,7 @@ class _PlayScreenState extends State<PlayScreen> {
   bool isOnce = false;
   late int _id;
   bool isVoiceFinished = false;
+  bool isSttAvailable = false;
 
   SpeechToText speechToText = SpeechToText();
   Timer? _listeningTimer;
@@ -84,8 +85,8 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void _startListening() async {
-    var available = await speechToText.initialize();
-    if (available) {
+    // var available = await speechToText.initialize();
+    if (isSttAvailable) {
       isListening = true;
       speechToText.listen(
         onResult: (result) {
@@ -147,6 +148,10 @@ class _PlayScreenState extends State<PlayScreen> {
     });
   }
 
+  void initStt() async {
+    isSttAvailable = await speechToText.initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
     _id = _studentId % 5 == 0 ? 5 : _studentId % 5;
@@ -154,6 +159,10 @@ class _PlayScreenState extends State<PlayScreen> {
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
+
+    if (!isSttAvailable) {
+      initStt();
+    }
 
     if (!isVoiceFinished) {
       if (!isListening) {
@@ -235,6 +244,7 @@ class _PlayScreenState extends State<PlayScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButtonWithStyle("もった", studentId: _studentId, () {
+                speechToText.stop();
                 soundEffect.setAsset("assets/sounds/good.mp3");
                 soundEffect.play();
                 setState(() {
@@ -244,10 +254,12 @@ class _PlayScreenState extends State<PlayScreen> {
                 });
               }),
               ElevatedButtonWithStyle("もういちど", studentId: _studentId, () {
+                speechToText.stop();
                 setState(() {});
               }),
               ElevatedButtonWithStyle("やめる", studentId: _studentId, () {
                 // Navigator.of(context).popUntil((route) => route.isFirst);
+                speechToText.stop();
                 _bgmController.stop();
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) => const LoginScreen()));

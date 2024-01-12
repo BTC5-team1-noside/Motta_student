@@ -13,11 +13,13 @@ class CalendarPage extends StatefulWidget {
       {super.key,
       required this.data,
       required this.studentId,
-      required this.bgmController});
+      required this.bgmController,
+      this.isFromEndScreen = false});
 
   final List<dynamic> data;
   final int studentId;
   final AudioPlayer bgmController;
+  final bool isFromEndScreen;
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -27,19 +29,43 @@ class _CalendarPageState extends State<CalendarPage> {
   late List _data;
   late int _studentId;
   late AudioPlayer _bgmController;
+  late Widget mainContents;
+  late bool isGifFinished;
+  late bool _isFromEndScreen;
+  final AudioPlayer soundEffect = AudioPlayer();
+
+  void changeMainContents() async {
+    await Future.delayed(const Duration(seconds: 2), () async {
+      await soundEffect.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
+
+      soundEffect.onPlayerStateChanged.listen((event) {
+        if (event == PlayerState.completed) {
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            isGifFinished = true;
+            setState(() {});
+          });
+        }
+      });
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    isGifFinished = false;
     _data = widget.data;
     _studentId = widget.studentId;
     _bgmController = widget.bgmController;
+    _isFromEndScreen = widget.isFromEndScreen;
+    changeMainContents();
   }
 
   @override
   Widget build(BuildContext context) {
     final int id = _studentId % 5 == 0 ? 5 : _studentId % 5;
-    return PopScope(
+    late Widget mainContents;
+    print(isGifFinished);
+    var popScope = PopScope(
       onPopInvoked: (didPop) {
         _bgmController.stop();
       },
@@ -221,5 +247,22 @@ class _CalendarPageState extends State<CalendarPage> {
         }),
       ),
     );
+    if (!_isFromEndScreen) {
+      mainContents = popScope;
+    } else {
+      mainContents = !isGifFinished
+          ? Scaffold(
+              body: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/char$id/stamp.gif"),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            )
+          : popScope;
+    }
+    return mainContents;
   }
 }

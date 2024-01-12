@@ -38,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                   itemCount: data.length,
                   itemBuilder: (context, index) {
                     final el = data[index];
-                    debugPrint("$el");
+                    // debugPrint("$el");
                     return GestureDetector(
                       onTap: () {
                         // debugPrint("student_idは？${el["student_id"]}");

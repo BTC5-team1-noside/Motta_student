@@ -110,7 +110,7 @@ Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
     final List<Map<String, dynamic>> studentNames =
         List<Map<String, dynamic>>.from(
             data["studentsHistory"].map((student) => student));
-    debugPrint("$studentNames");
+    // debugPrint("$studentNames");
     return studentNames;
   } catch (error) {
     debugPrint("student_login line28:エラーです！");
@@ -140,7 +140,10 @@ Future synthesizeVoiceUrl(
       if (res["success"] == true) {
         return res["mp3DownloadUrl"];
       } else {
-        Future.delayed(const Duration(milliseconds: 250));
+        await Future.delayed(const Duration(milliseconds: 500), () {
+          print("inside deley");
+        });
+        print("outside delay");
         continue;
       }
     }
@@ -150,7 +153,8 @@ Future synthesizeVoiceUrl(
 }
 
 Future<bool> isMp3Available({required String incomingUrl}) async {
-  String url = "audio2.tts.quest";
+  int identifier = int.parse(incomingUrl.substring(13, 14));
+  String url = "audio$identifier.tts.quest";
   final remainUrl = incomingUrl.substring(25);
   try {
     while (true) {
@@ -161,12 +165,15 @@ Future<bool> isMp3Available({required String incomingUrl}) async {
         ),
       );
       final res = json.decode(response.body);
-      print(res);
+      // print(res);
       if (res["isAudioReady"]) {
         return true;
       } else {
-        Future.delayed(const Duration(milliseconds: 250));
-        continue;
+        await Future.delayed(const Duration(milliseconds: 500), () {
+          print("delayed inside");
+        });
+        print("delayed outside");
+        // continue;
         // return false;
       }
     }

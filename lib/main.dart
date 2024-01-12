@@ -8,15 +8,15 @@ final AudioPlayer bgmPlayer = AudioPlayer();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const app = MyApp();
-  final devicePreview = DevicePreview(
-    builder: (_) => app,
-  );
-  initializeDateFormatting().then((_) {
-    runApp(devicePreview);
-  });
+  // final devicePreview = DevicePreview(
+  //   builder: (_) => app,
+  // );
   // initializeDateFormatting().then((_) {
-  //   runApp(app);
+  //   runApp(devicePreview);
   // });
+  initializeDateFormatting().then((_) {
+    runApp(app);
+  });
 }
 
 @override

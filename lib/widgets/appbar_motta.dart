@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 
 List<Color> colorsArr = [
-  const Color.fromARGB(255, 59, 111, 190),
-  const Color.fromARGB(255, 228, 188, 109),
-  const Color.fromARGB(255, 55, 172, 89),
-  const Color.fromARGB(255, 61, 186, 87),
-  const Color.fromARGB(255, 106, 186, 83)
+  const Color.fromARGB(255, 25, 39, 114),
+  const Color.fromARGB(255, 202, 133, 56),
+  const Color.fromARGB(255, 219, 186, 77),
+  const Color.fromARGB(255, 125, 77, 52),
+  const Color.fromARGB(255, 54, 139, 50)
 ];
 
 class AppBarMotta extends StatelessWidget implements PreferredSizeWidget {
