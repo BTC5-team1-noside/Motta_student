@@ -14,7 +14,7 @@ class CalendarPage extends StatefulWidget {
       required this.data,
       required this.studentId,
       required this.bgmController,
-      this.isFromEndScreen = false});
+      this.isFromEndScreen = true});
 
   final List<dynamic> data;
   final int studentId;
@@ -36,12 +36,12 @@ class _CalendarPageState extends State<CalendarPage> {
   final AudioPlayer soundEffect = AudioPlayer();
 
   void changeMainContents() async {
-    await Future.delayed(const Duration(seconds: 2), () async {
+    await Future.delayed(const Duration(milliseconds: 900), () async {
       await soundEffect.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
 
       soundEffect.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
-          Future.delayed(const Duration(milliseconds: 1500), () {
+          Future.delayed(const Duration(seconds: 1), () {
             isGifFinished = true;
             setState(() {});
           });

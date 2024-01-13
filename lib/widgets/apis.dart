@@ -153,8 +153,9 @@ Future synthesizeVoiceUrl(
 }
 
 Future<bool> isMp3Available({required String incomingUrl}) async {
-  int identifier = int.parse(incomingUrl.substring(13, 14));
-  String url = "audio$identifier.tts.quest";
+  // int identifier = int.parse(incomingUrl.substring(13, 14));
+  print(incomingUrl.substring(8, 24));
+  String url = incomingUrl.substring(8, 24);
   final remainUrl = incomingUrl.substring(25);
   try {
     while (true) {
