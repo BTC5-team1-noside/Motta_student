@@ -16,8 +16,8 @@ class EndScreen extends StatelessWidget {
   final int studentId;
   final String date;
   final String text = "ぜんぶかくにんできたね\nすごいぞ!\nキャッホー";
-  final AudioPlayer characterVoice = AudioPlayer();
-  final AudioPlayer bgmController;
+  AudioPlayer? characterVoice = AudioPlayer();
+  AudioPlayer? bgmController;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class EndScreen extends StatelessWidget {
       postConfirmDate(date: date, studentId: studentId);
 
       Future.delayed(const Duration(seconds: 1), () async {
-        await characterVoice.play(AssetSource('sounds/complete_char$id.wav'),
-            volume: 1.0);
+        await characterVoice!
+            .play(AssetSource('sounds/complete_char$id.wav'), volume: 1.0);
       });
 
       final data = await getCalendarData(
@@ -36,7 +36,7 @@ class EndScreen extends StatelessWidget {
         studentId: studentId,
       );
 
-      characterVoice.onPlayerStateChanged.listen((event) {
+      characterVoice!.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) return;
@@ -45,7 +45,7 @@ class EndScreen extends StatelessWidget {
                 builder: (ctx) => CalendarPage(
                   data: data,
                   studentId: studentId,
-                  bgmController: bgmController,
+                  bgmController: bgmController!,
                   isFromEndScreen: true,
                 ),
               ),
@@ -61,8 +61,8 @@ class EndScreen extends StatelessWidget {
       appBar: AppBarMotta(studentId: studentId),
       body: PopScope(
         onPopInvoked: (didPop) {
-          bgmController.stop();
-          characterVoice.stop();
+          bgmController = null;
+          characterVoice = null;
         },
         child: Container(
           decoration: BoxDecoration(
@@ -76,6 +76,9 @@ class EndScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 150,
+                ),
                 Image.asset("assets/images/char$id/character_end.jpg"),
                 BodyText(text: text),
               ],

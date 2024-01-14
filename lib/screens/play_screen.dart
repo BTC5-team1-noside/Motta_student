@@ -17,7 +17,7 @@ class PlayScreen extends StatefulWidget {
     super.key,
     required this.belongings,
     required this.studentId,
-    required this.voiceData,
+    // required this.voiceData,
     required this.voiceText,
     required this.date,
     required this.bgmController,
@@ -26,7 +26,7 @@ class PlayScreen extends StatefulWidget {
 
   final DayBelongings belongings;
   final int studentId;
-  final dynamic voiceData;
+  // final dynamic voiceData;
   final List voiceText;
   final String date;
   final audio_player.AudioPlayer bgmController;
@@ -42,7 +42,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _items;
   late List _additionalItems;
   late int _studentId;
-  late dynamic _voiceData;
+  // late dynamic _voiceData;
   late dynamic _downloadVoiceData;
   late List _voiceText;
   late String _date;
@@ -58,10 +58,10 @@ class _PlayScreenState extends State<PlayScreen> {
   bool isVoiceFinished = false;
   bool isSttAvailable = false;
 
-  SpeechToText speechToText = SpeechToText();
+  SpeechToText? speechToText = SpeechToText();
   Timer? _listeningTimer;
-  final just_audio.AudioPlayer characterVoice = just_audio.AudioPlayer();
-  final just_audio.AudioPlayer soundEffect = just_audio.AudioPlayer();
+  just_audio.AudioPlayer? characterVoice = just_audio.AudioPlayer();
+  just_audio.AudioPlayer? soundEffect = just_audio.AudioPlayer();
 
   @override
   void initState() {
@@ -71,7 +71,7 @@ class _PlayScreenState extends State<PlayScreen> {
     _items = _belongings.items;
     _additionalItems = _belongings.additionalItems;
     _studentId = widget.studentId;
-    _voiceData = widget.voiceData;
+    // _voiceData = widget.voiceData;
     _voiceText = widget.voiceText;
     _date = widget.date;
     _bgmController = widget.bgmController;
@@ -86,16 +86,17 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void _startListening() async {
     // var available = await speechToText.initialize();
+    await Future.delayed(const Duration(milliseconds: 500));
     if (isSttAvailable) {
       isListening = true;
-      speechToText.listen(
+      speechToText!.listen(
         onResult: (result) {
           if (result.recognizedWords.contains("持った")) {
             debugPrint("$result");
             _stopListening();
             if (isOnce == true) {
-              soundEffect.setAsset("sounds/good.mp3");
-              soundEffect.play();
+              soundEffect!.setAsset("sounds/good.mp3");
+              soundEffect!.play();
               setState(() {
                 answered = true;
               });
@@ -109,7 +110,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void _stopListening() {
     if (isListening) {
-      speechToText.stop();
+      speechToText!.stop();
       isListening = false;
     }
   }
@@ -117,7 +118,7 @@ class _PlayScreenState extends State<PlayScreen> {
   Future<void> speak() async {
     // playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
     // print(_voiceUrl);
-    characterVoice.setUrl(_voiceUrl);
+    characterVoice!.setUrl(_voiceUrl);
     while (true) {
       if (await isMp3Available(incomingUrl: _voiceUrl)) {
         Future.delayed(const Duration(milliseconds: 250));
@@ -125,7 +126,7 @@ class _PlayScreenState extends State<PlayScreen> {
         break;
       }
     }
-    characterVoice.play();
+    characterVoice!.play();
     if (index < _subjects.length) {
       // _downloadVoiceData = await synthesizeVoice(
       //   text: _voiceText[index + 1],
@@ -136,7 +137,7 @@ class _PlayScreenState extends State<PlayScreen> {
       print("nextUrl:$_nextVoiceUrl");
     }
 
-    characterVoice.playerStateStream.listen((state) {
+    characterVoice!.playerStateStream.listen((state) {
       if (state.processingState == just_audio.ProcessingState.completed) {
         isOnce = true;
         isVoiceFinished = true;
@@ -149,7 +150,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void initStt() async {
-    isSttAvailable = await speechToText.initialize();
+    isSttAvailable = await speechToText!.initialize();
   }
 
   @override
@@ -244,9 +245,9 @@ class _PlayScreenState extends State<PlayScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButtonWithStyle("もった", studentId: _studentId, () {
-                speechToText.stop();
-                soundEffect.setAsset("assets/sounds/good.mp3");
-                soundEffect.play();
+                speechToText!.stop();
+                soundEffect!.setAsset("assets/sounds/good.mp3");
+                soundEffect!.play();
                 setState(() {
                   answered = true;
                   isOnce = false;
@@ -254,13 +255,15 @@ class _PlayScreenState extends State<PlayScreen> {
                 });
               }),
               ElevatedButtonWithStyle("もういちど", studentId: _studentId, () {
-                speechToText.stop();
+                speechToText!.stop();
                 setState(() {});
               }),
               ElevatedButtonWithStyle("やめる", studentId: _studentId, () {
                 // Navigator.of(context).popUntil((route) => route.isFirst);
-                speechToText.stop();
-                _bgmController.stop();
+                speechToText = null;
+                _bgmController = null;
+                characterVoice = null;
+                soundEffect = null;
                 Navigator.of(context).push(
                     MaterialPageRoute(builder: (ctx) => const LoginScreen()));
               })
@@ -286,8 +289,8 @@ class _PlayScreenState extends State<PlayScreen> {
       Future.delayed(const Duration(seconds: 1), () {
         if (index == _subjects.length) {
           if (!context.mounted) return;
-          soundEffect.setAsset("assets/sounds/complete.mp3");
-          soundEffect.play();
+          soundEffect!.setAsset("assets/sounds/complete.mp3");
+          soundEffect!.play();
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (ctx) => EndScreen(
@@ -311,8 +314,9 @@ class _PlayScreenState extends State<PlayScreen> {
       appBar: AppBarMotta(studentId: _studentId),
       body: PopScope(
         onPopInvoked: (didPop) {
-          _bgmController.stop();
-          characterVoice.stop();
+          _bgmController = null;
+          characterVoice = null;
+          soundEffect = null;
         },
         child: Container(
           decoration: BoxDecoration(

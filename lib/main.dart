@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:student/screens/end_screen.dart';
 import 'package:student/screens/student_login.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:just_audio/just_audio.dart';
@@ -8,15 +9,15 @@ final AudioPlayer bgmPlayer = AudioPlayer();
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   const app = MyApp();
-  final devicePreview = DevicePreview(
-    builder: (_) => app,
-  );
-  initializeDateFormatting().then((_) {
-    runApp(devicePreview);
-  });
+  // final devicePreview = DevicePreview(
+  //   builder: (_) => app,
+  // );
   // initializeDateFormatting().then((_) {
-  //   runApp(app);
+  //   runApp(devicePreview);
   // });
+  initializeDateFormatting().then((_) {
+    runApp(app);
+  });
 }
 
 @override

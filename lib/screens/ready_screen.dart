@@ -4,7 +4,6 @@ import 'package:student/models/belongings.dart';
 import 'package:student/screens/play_screen.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/body_text.dart';
-import 'package:student/widgets/elevated_button_with_style.dart';
 import 'package:student/widgets/apis.dart';
 
 class ReadyScreen extends StatelessWidget {
@@ -20,11 +19,11 @@ class ReadyScreen extends StatelessWidget {
   final int studentId;
   late dynamic voiceData;
   final String date;
-  final AudioPlayer bgmController;
+  AudioPlayer? bgmController;
   late String voiceUrl;
   @override
   Widget build(BuildContext context) {
-    final AudioPlayer characterVoice = AudioPlayer();
+    AudioPlayer? characterVoice = AudioPlayer();
     final int id = studentId % 5 == 0 ? 5 : (studentId + 5) % 5;
     late List textList;
     late List voiceData;
@@ -73,10 +72,10 @@ class ReadyScreen extends StatelessWidget {
     Future<void> speak() async {
       voiceUrl =
           await synthesizeVoiceUrl(text: textList[0], studentId: studentId);
-      await characterVoice.play(AssetSource('sounds/ready_char$id.wav'),
-          volume: 1.0);
+      await characterVoice!
+          .play(AssetSource('sounds/ready_char$id.wav'), volume: 1.0);
 
-      characterVoice.onPlayerStateChanged.listen((event) {
+      characterVoice!.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) {
@@ -87,10 +86,10 @@ class ReadyScreen extends StatelessWidget {
                 builder: (ctx) => PlayScreen(
                   belongings: belongings,
                   studentId: studentId,
-                  voiceData: voiceData,
+                  // voiceData: voiceData,
                   voiceText: textList,
                   date: date,
-                  bgmController: bgmController,
+                  bgmController: bgmController!,
                   voiceUrl: voiceUrl,
                 ),
               ),
@@ -108,8 +107,8 @@ class ReadyScreen extends StatelessWidget {
       appBar: AppBarMotta(studentId: studentId),
       body: PopScope(
         onPopInvoked: (didPop) {
-          bgmController.stop();
-          characterVoice.stop();
+          bgmController = null;
+          characterVoice = null;
         },
         child: Container(
           decoration: BoxDecoration(

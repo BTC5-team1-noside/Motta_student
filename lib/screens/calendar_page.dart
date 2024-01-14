@@ -28,18 +28,18 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   late List _data;
   late int _studentId;
-  late AudioPlayer _bgmController;
+  AudioPlayer? _bgmController;
   late final DateTime _selected = DateTime(2024, 1, 22);
   late Widget mainContents;
   late bool isGifFinished;
   late bool _isFromEndScreen;
-  final AudioPlayer soundEffect = AudioPlayer();
+  AudioPlayer? soundEffect = AudioPlayer();
 
   void changeMainContents() async {
     await Future.delayed(const Duration(milliseconds: 900), () async {
-      await soundEffect.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
+      await soundEffect!.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
 
-      soundEffect.onPlayerStateChanged.listen((event) {
+      soundEffect!.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(seconds: 1), () {
             isGifFinished = true;
@@ -68,7 +68,8 @@ class _CalendarPageState extends State<CalendarPage> {
     print(isGifFinished);
     var popScope = PopScope(
       onPopInvoked: (didPop) {
-        _bgmController.stop();
+        _bgmController = null;
+        soundEffect = null;
       },
       child: ChangeNotifierProvider<CalendarModel>(
         create: (_) => CalendarModel()..init(),
@@ -278,9 +279,10 @@ class _CalendarPageState extends State<CalendarPage> {
                       height: 100,
                       child: ElevatedButtonWithStyle(
                         "さいしょにもどる",
-                        studentId: widget.studentId,
+                        studentId: _studentId,
                         () {
-                          widget.bgmController.stop();
+                          _bgmController = null;
+                          soundEffect = null;
                           if (!context.mounted) return;
                           Navigator.of(context).push(
                             MaterialPageRoute(

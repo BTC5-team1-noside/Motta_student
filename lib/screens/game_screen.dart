@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:student/models/belongings.dart';
 import "package:http/http.dart" as http;
 import 'package:student/screens/calendar_page.dart';
+import 'package:student/screens/end_screen.dart';
 import "dart:convert";
 import 'package:student/screens/ready_screen.dart';
 import 'package:student/widgets/apis.dart';
@@ -14,13 +15,13 @@ class GameScreen extends StatelessWidget {
   GameScreen({super.key, required this.studentId});
 
   final int studentId;
-  final AudioPlayer characterVoice = AudioPlayer();
-  final AudioPlayer bgm = AudioPlayer();
+  AudioPlayer? characterVoice = AudioPlayer();
+  AudioPlayer? bgm = AudioPlayer();
 
   void _startButton(BuildContext context, {String date = "2024-01-09"}) async {
-    await bgm.setVolume(0.1);
-    await characterVoice.setReleaseMode(ReleaseMode.stop);
-    await characterVoice.play(AssetSource('sounds/start.mp3'), volume: 1.0);
+    await bgm!.setVolume(0.1);
+    await characterVoice!.setReleaseMode(ReleaseMode.stop);
+    await characterVoice!.play(AssetSource('sounds/start.mp3'), volume: 1.0);
 
     final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
         "/api/v1/student/timetables-history/$date");
@@ -31,7 +32,7 @@ class GameScreen extends StatelessWidget {
       // debugPrint("${data["selectedDate"]}");
       DayBelongings dataFromJson = DayBelongings.fromJson(data);
 
-      characterVoice.onPlayerStateChanged.listen((event) {
+      characterVoice!.onPlayerStateChanged.listen((event) {
         if (event == PlayerState.completed) {
           Future.delayed(const Duration(milliseconds: 1200), () {
             if (!context.mounted) return;
@@ -41,7 +42,7 @@ class GameScreen extends StatelessWidget {
                   belongings: dataFromJson,
                   studentId: studentId,
                   date: date,
-                  bgmController: bgm,
+                  bgmController: bgm!,
                 ),
               ),
             );
@@ -57,9 +58,9 @@ class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // bgm.stop();
     // bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
-    bgm.onPlayerStateChanged.listen((event) {
+    bgm!.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.completed) {
-        bgm.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
+        bgm!.play(AssetSource('sounds/enchanted-chimes.mp3'), volume: 0.1);
       }
     });
 
@@ -67,8 +68,8 @@ class GameScreen extends StatelessWidget {
       appBar: AppBarMotta(studentId: studentId),
       body: PopScope(
         onPopInvoked: (didPop) {
-          bgm.stop();
-          characterVoice.stop();
+          bgm = null;
+          characterVoice = null;
         },
         child: Container(
           decoration: const BoxDecoration(
@@ -113,7 +114,7 @@ class GameScreen extends StatelessWidget {
                         builder: (ctx) => CalendarPage(
                           data: data,
                           studentId: studentId,
-                          bgmController: bgm,
+                          bgmController: bgm!,
                         ),
                       ),
                     );
