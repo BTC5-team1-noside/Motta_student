@@ -30,7 +30,7 @@ class PlayScreen extends StatefulWidget {
   final List voiceText;
   final String date;
   final audio_player.AudioPlayer bgmController;
-  final String voiceUrl;
+  final List voiceUrl;
 
   @override
   State<PlayScreen> createState() => _PlayScreenState();
@@ -43,12 +43,13 @@ class _PlayScreenState extends State<PlayScreen> {
   late List _additionalItems;
   late int _studentId;
   // late dynamic _voiceData;
-  late dynamic _downloadVoiceData;
+  // late dynamic _downloadVoiceData;
   late List _voiceText;
   late String _date;
   late dynamic _bgmController;
-  late String _voiceUrl;
-  late String _nextVoiceUrl;
+  late List _voiceUrl;
+  late List _lastVoiceUrl;
+  late List _nextVoiceUrl = ["", "."];
 
   int index = 0;
   bool answered = false;
@@ -57,6 +58,7 @@ class _PlayScreenState extends State<PlayScreen> {
   late int _id;
   bool isVoiceFinished = false;
   bool isSttAvailable = false;
+  bool isScriptChange = false;
 
   SpeechToText? speechToText = SpeechToText();
   Timer? _listeningTimer;
@@ -76,6 +78,7 @@ class _PlayScreenState extends State<PlayScreen> {
     _date = widget.date;
     _bgmController = widget.bgmController;
     _voiceUrl = widget.voiceUrl;
+    _lastVoiceUrl = ["", ""];
   }
 
   @override
@@ -118,15 +121,20 @@ class _PlayScreenState extends State<PlayScreen> {
   Future<void> speak() async {
     // playVoiceFromData(data: _voiceData, audioPlayer: characterVoice);
     // print(_voiceUrl);
-    characterVoice!.setUrl(_voiceUrl);
-    while (true) {
-      if (await isMp3Available(incomingUrl: _voiceUrl)) {
-        Future.delayed(const Duration(milliseconds: 250));
-      } else {
-        break;
-      }
-    }
-    characterVoice!.play();
+    // while (true) {
+    //   if (await isMp3Available(incomingUrl: _voiceUrl[1])) {
+    //     break;
+    //   } else {
+    //     Future.delayed(const Duration(milliseconds: 500));
+    //   }
+    // }
+    // if (_lastVoiceUrl[1] == _voiceUrl[1]) {
+    //   setState(() {});
+    //   return;
+    // // }
+    // late Future mp3Available;
+    // late Future nextVoiceUrlFuture;
+    bool mp3Available = await isMp3Available(incomingUrl: _voiceUrl[1]);
     if (index < _subjects.length) {
       // _downloadVoiceData = await synthesizeVoice(
       //   text: _voiceText[index + 1],
@@ -134,19 +142,41 @@ class _PlayScreenState extends State<PlayScreen> {
       // );
       _nextVoiceUrl = await synthesizeVoiceUrl(
           text: _voiceText[index + 1], studentId: _studentId);
-      print("nextUrl:$_nextVoiceUrl");
     }
 
-    characterVoice!.playerStateStream.listen((state) {
-      if (state.processingState == just_audio.ProcessingState.completed) {
-        isOnce = true;
-        isVoiceFinished = true;
-        setState(() {});
-        // _voiceData = _downloadVoiceData;
-        _voiceUrl = _nextVoiceUrl;
-        _startListening();
+    if (_lastVoiceUrl == _nextVoiceUrl) {
+      await Future.delayed(const Duration(milliseconds: 250));
+      print("same?");
+      setState(() {});
+    } else {
+      if (mp3Available) {
+        characterVoice!.setUrl(_voiceUrl[0]);
+        characterVoice!.play();
+        print("nextUrl:$_nextVoiceUrl");
       }
-    });
+
+      characterVoice!.playerStateStream.listen((state) async {
+        if (state.processingState == just_audio.ProcessingState.completed) {
+          print("끝?");
+
+          _startListening();
+          // _nextVoiceUrl = await nextVoiceUrlFuture;
+          print("Last:$_lastVoiceUrl");
+          print("Next:$_nextVoiceUrl");
+          setState(() {
+            isOnce = true;
+            isVoiceFinished = true;
+            // _voiceData = _downloadVoiceData;
+            if (_voiceUrl != _nextVoiceUrl) {
+              _lastVoiceUrl = _voiceUrl;
+              _voiceUrl = _nextVoiceUrl;
+            }
+            // _nextVoiceUrl = ["", ","];
+            // _voiceUrl = await nextVoiceUrlFuture;
+          });
+        }
+      });
+    }
   }
 
   void initStt() async {
@@ -156,7 +186,6 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     _id = _studentId % 5 == 0 ? 5 : _studentId % 5;
-    debugPrint("play_screen line:126: $_id");
     AssetImage backgroundPicture;
     Widget mainContent;
     List<Widget> bodyMain;
@@ -244,7 +273,8 @@ class _PlayScreenState extends State<PlayScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButtonWithStyle("もった", studentId: _studentId, () {
+              ElevatedButtonWithStyle("もった",
+                  studentId: _studentId, icon: Icons.check_circle_rounded, () {
                 speechToText!.stop();
                 soundEffect!.setAsset("assets/sounds/good.mp3");
                 soundEffect!.play();
@@ -254,11 +284,17 @@ class _PlayScreenState extends State<PlayScreen> {
                   isListening = false;
                 });
               }),
-              ElevatedButtonWithStyle("もういちど", studentId: _studentId, () {
+              ElevatedButtonWithStyle("もういちど",
+                  studentId: _studentId,
+                  icon: Icons.replay_circle_filled_rounded, () {
                 speechToText!.stop();
-                setState(() {});
+                _voiceUrl = _lastVoiceUrl;
+                setState(() {
+                  isListening = false;
+                });
               }),
-              ElevatedButtonWithStyle("やめる", studentId: _studentId, () {
+              ElevatedButtonWithStyle("やめる",
+                  studentId: _studentId, icon: Icons.cancel_rounded, () {
                 // Navigator.of(context).popUntil((route) => route.isFirst);
                 speechToText = null;
                 _bgmController = null;
@@ -301,8 +337,8 @@ class _PlayScreenState extends State<PlayScreen> {
             ),
           );
         } else {
+          index++;
           setState(() {
-            index++;
             answered = false;
             isListening = false;
           });

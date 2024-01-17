@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:student/models/calendar_model.dart';
+import 'package:student/screens/game_screen.dart';
 import 'package:student/screens/student_login.dart';
 import 'package:student/widgets/appbar_motta.dart';
 import 'package:student/widgets/elevated_button_with_style.dart';
@@ -14,7 +15,7 @@ class CalendarPage extends StatefulWidget {
       required this.data,
       required this.studentId,
       required this.bgmController,
-      this.isFromEndScreen = true});
+      this.isFromEndScreen = false});
 
   final List<dynamic> data;
   final int studentId;
@@ -29,25 +30,27 @@ class _CalendarPageState extends State<CalendarPage> {
   late List _data;
   late int _studentId;
   AudioPlayer? _bgmController;
-  late final DateTime _selected = DateTime(2024, 1, 22);
+  late final DateTime _selected = DateTime(2024, 1, 24);
   late Widget mainContents;
   late bool isGifFinished;
   late bool _isFromEndScreen;
   AudioPlayer? soundEffect = AudioPlayer();
 
   void changeMainContents() async {
-    await Future.delayed(const Duration(milliseconds: 900), () async {
-      await soundEffect!.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
+    if (_isFromEndScreen) {
+      await Future.delayed(const Duration(milliseconds: 900), () async {
+        await soundEffect!.play(AssetSource('sounds/stamp.mp3'), volume: 1.0);
 
-      soundEffect!.onPlayerStateChanged.listen((event) {
-        if (event == PlayerState.completed) {
-          Future.delayed(const Duration(seconds: 1), () {
-            isGifFinished = true;
-            setState(() {});
-          });
-        }
+        soundEffect!.onPlayerStateChanged.listen((event) {
+          if (event == PlayerState.completed) {
+            Future.delayed(const Duration(seconds: 1), () {
+              isGifFinished = true;
+              setState(() {});
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   @override
@@ -278,15 +281,18 @@ class _CalendarPageState extends State<CalendarPage> {
                     SizedBox(
                       height: 100,
                       child: ElevatedButtonWithStyle(
-                        "さいしょにもどる",
+                        "ホームにもどる",
                         studentId: _studentId,
+                        icon: Icons.home,
                         () {
                           _bgmController = null;
                           soundEffect = null;
                           if (!context.mounted) return;
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (ctx) => const LoginScreen(),
+                              builder: (ctx) => GameScreen(
+                                studentId: _studentId,
+                              ),
                             ),
                           );
                         },

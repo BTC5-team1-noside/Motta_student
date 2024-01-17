@@ -88,17 +88,19 @@ class GameScreen extends StatelessWidget {
                 SizedBox(
                   height: 100,
                   child: ElevatedButtonWithStyle("もちものかくにん　はじめ",
+                      icon: Icons.play_circle_fill_rounded,
                       studentId: studentId, () {
                     final formatDate = DateFormat("yyyy-MM-dd");
                     DateTime currentDate = DateTime.now();
                     final formattedDate = formatDate.format(currentDate);
                     // _startButton(context, date: formattedDate);
-                    _startButton(context, date: "2024-01-22");
+                    _startButton(context, date: "2024-01-24");
                   }),
                 ),
                 SizedBox(
                   height: 50,
                   child: ElevatedButtonWithStyle("かれんだーかくにん",
+                      icon: Icons.event_rounded,
                       studentId: studentId, () async {
                     final formatDate = DateFormat("yyyy-MM-dd");
                     DateTime currentDate = DateTime.now();

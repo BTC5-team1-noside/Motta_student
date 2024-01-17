@@ -122,6 +122,8 @@ Future synthesizeVoiceUrl(
     {required String text, required int studentId}) async {
   int speakerIndex = (studentId % 5 == 0 ? 5 : studentId % 5) - 1;
   String url = "api.tts.quest";
+  DateTime start = DateTime.now();
+  print(text.substring(0, 1));
   try {
     while (true) {
       final response = await http.get(
@@ -136,14 +138,13 @@ Future synthesizeVoiceUrl(
         ),
       );
       final res = json.decode(response.body);
-
+      // while (true) {
       if (res["success"] == true) {
-        return res["mp3DownloadUrl"];
+        print(
+            "${text.substring(0, 1)} 소요시간:${DateTime.now().difference(start)}");
+        return [res["mp3DownloadUrl"], res["audioStatusUrl"]];
       } else {
-        await Future.delayed(const Duration(milliseconds: 500), () {
-          print("inside deley");
-        });
-        print("outside delay");
+        await Future.delayed(const Duration(milliseconds: 500));
         continue;
       }
     }
@@ -154,7 +155,9 @@ Future synthesizeVoiceUrl(
 
 Future<bool> isMp3Available({required String incomingUrl}) async {
   // int identifier = int.parse(incomingUrl.substring(13, 14));
-  print(incomingUrl.substring(8, 24));
+  // print(incomingUrl.substring(8, 24));
+  // print(incomingUrl);
+
   String url = incomingUrl.substring(8, 24);
   final remainUrl = incomingUrl.substring(25);
   try {
@@ -166,14 +169,13 @@ Future<bool> isMp3Available({required String incomingUrl}) async {
         ),
       );
       final res = json.decode(response.body);
-      // print(res);
+
+      print(res);
       if (res["isAudioReady"]) {
+        print("AudioReady!");
         return true;
       } else {
-        await Future.delayed(const Duration(milliseconds: 500), () {
-          print("delayed inside");
-        });
-        print("delayed outside");
+        await Future.delayed(const Duration(milliseconds: 500), () {});
         // continue;
         // return false;
       }
@@ -183,6 +185,48 @@ Future<bool> isMp3Available({required String incomingUrl}) async {
     return false;
   }
 }
+
+List<String> createVoiceDate({
+  required List subjects,
+  required List items,
+  required List additionalItems,
+}) {
+  List<String> arrText = [];
+  for (int index = 0; index < subjects.length + 1; index++) {
+    String txt = "";
+    if (index < subjects.length) {
+      txt += "${subjects[index].period} じかんめ、 ${subjects[index].subject}だよ！,\n";
+      for (int i = 0; i < subjects[index].belongings.length; i++) {
+        txt += "${subjects[index].belongings[i]}。、。";
+      }
+      txt += "もった？";
+      arrText.add(txt);
+    } else {
+      txt += "いつもの。";
+      for (int j = 0; j < items.length; j++) {
+        txt += "${items[j]}。、。";
+      }
+      if (additionalItems.isNotEmpty) {
+        txt += "あと。";
+        for (int k = 0; k < additionalItems.length; k++) {
+          if (additionalItems[k] != "") {
+            txt += "${additionalItems[k]}も。、。";
+          }
+        }
+      }
+      txt += "もった？";
+      arrText.add(txt);
+    }
+  }
+  print(arrText);
+  // debugPrint("ready_screen line 68:$arrText");
+  return arrText;
+}
+
+
+
+
+
 
 // void playVoiceFromData(text) async {
     

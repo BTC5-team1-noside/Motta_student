@@ -19,10 +19,12 @@ class ElevatedButtonWithStyle extends StatelessWidget {
     this.func, {
     super.key,
     required this.studentId,
+    required this.icon,
   });
   final String text;
   final void Function() func;
   final int studentId;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +35,23 @@ class ElevatedButtonWithStyle extends StatelessWidget {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10)))),
       onPressed: func,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 35,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
+      child: IntrinsicWidth(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 35),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              text,
+              style: const TextStyle(
+                fontSize: 35,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );

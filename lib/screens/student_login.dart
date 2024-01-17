@@ -20,7 +20,7 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(
             height: 50,
             child: Text(
-              "1がつ 22にち（げつ）",
+              "1がつ 24にち（げつ）",
               style: TextStyle(
                   fontSize: 33,
                   fontWeight: FontWeight.bold,
@@ -37,7 +37,8 @@ class LoginScreen extends StatelessWidget {
             width: double.infinity,
             // color: const Color.fromARGB(255, 246, 246, 230),
             child: FutureBuilder<List<Map<String, dynamic>>>(
-              future: getStudents(DateTime.now()),
+              // future: getStudents(DateTime.now()),
+              future: getStudents(DateTime(2024, 1, 24)),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();

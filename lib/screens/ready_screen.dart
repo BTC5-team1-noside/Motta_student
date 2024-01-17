@@ -20,54 +20,23 @@ class ReadyScreen extends StatelessWidget {
   late dynamic voiceData;
   final String date;
   AudioPlayer? bgmController;
-  late String voiceUrl;
+  late List voiceUrl;
   @override
   Widget build(BuildContext context) {
     AudioPlayer? characterVoice = AudioPlayer();
     final int id = studentId % 5 == 0 ? 5 : (studentId + 5) % 5;
     late List textList;
-    late List voiceData;
+    // late List voiceData;
     const String text = "もちものかくにん はじめるよ!\nもってたら、「もった!」って、\nへんじしてね!";
 
     final List subjects = belongings.subjects;
     final List items = belongings.items;
     final List additionalItems = belongings.additionalItems;
 
-    List<String> createVoiceDate() {
-      List<String> arrText = [];
-      for (int index = 0; index < subjects.length + 1; index++) {
-        String txt = "";
-        if (index < subjects.length) {
-          txt +=
-              "${subjects[index].period} じかんめ、 ${subjects[index].subject}だよ！,\n";
-          for (int i = 0; i < subjects[index].belongings.length; i++) {
-            txt += "${subjects[index].belongings[i]}。、。";
-          }
-          txt += "もった？";
-          arrText.add(txt);
-        } else {
-          txt += "いつもの。";
-          for (int j = 0; j < items.length; j++) {
-            txt += "${items[j]}。、。";
-          }
-          if (additionalItems.isNotEmpty) {
-            txt += "あと。";
-            for (int k = 0; k < additionalItems.length; k++) {
-              txt += "${additionalItems[k]}も。、。";
-            }
-          }
-          txt += "もった？";
-          arrText.add(txt);
-        }
-      }
-      // debugPrint("ready_screen line 68:$arrText");
-      return arrText;
-    }
-
-    void splitVoiceData() async {
-      voiceData =
-          await synthesizeVoice(text: textList[0], studentId: studentId);
-    }
+    // void splitVoiceData() async {
+    //   voiceData =
+    //       await synthesizeVoice(text: textList[0], studentId: studentId);
+    // }
 
     Future<void> speak() async {
       voiceUrl =
@@ -99,8 +68,10 @@ class ReadyScreen extends StatelessWidget {
       });
     }
 
-    textList = createVoiceDate();
-    splitVoiceData();
+    textList = createVoiceDate(
+        subjects: subjects, items: items, additionalItems: additionalItems);
+    // splitVoiceData();
+    // print(textList);
     speak();
 
     return Scaffold(
