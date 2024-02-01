@@ -3,6 +3,7 @@ import "dart:io";
 import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
+import "package:intl/intl.dart";
 import "package:just_audio/just_audio.dart";
 import "package:student/widgets/my_stream_audio_source.dart";
 
@@ -95,14 +96,14 @@ Future<List<dynamic>> getCalendarData(
 }
 
 Future<List<Map<String, dynamic>>> getStudents(DateTime? selectedDate) async {
-  final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
-      "/api/v1/teacher/home/history", {"date": "2024-01-22"});
-
-  // final formatDate = DateFormat("yyyy-MM-dd");
-  // DateTime currentDate = selectedDate ?? DateTime.now();
-  // final formattedDate = formatDate.format(currentDate);
   // final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
-  //     "/api/v1/teacher/home/history", {"date": formattedDate});
+  //     "/api/v1/teacher/home/history", {"date": "2024-01-22"});
+
+  final formatDate = DateFormat("yyyy-MM-dd");
+  DateTime currentDate = selectedDate ?? DateTime.now();
+  final formattedDate = formatDate.format(currentDate);
+  final url = Uri.https("motta-9dbb2df4f6d7.herokuapp.com",
+      "/api/v1/teacher/home/history", {"date": formattedDate});
 
   try {
     final res = await http.get(url);

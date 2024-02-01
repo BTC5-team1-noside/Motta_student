@@ -48,6 +48,7 @@ class LoginScreen extends StatelessWidget {
                   return const Text('データがありません');
                 } else {
                   final List<Map<String, dynamic>> data = snapshot.data!;
+                  print(data);
                   return GridView.builder(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
